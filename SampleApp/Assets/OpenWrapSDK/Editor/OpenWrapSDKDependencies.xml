@@ -1,0 +1,18 @@
+<dependencies>
+	<iosPods>
+    <iosPod name="OpenWrapSDK" version="2.6.3">
+      <sources>
+        <source>https://github.com/CocoaPods/Specs</source>
+      </sources>
+    </iosPod>
+  </iosPods>
+
+<androidPackages>
+  <androidPackage spec="com.pubmatic.sdk:openwrap:2.6.5">
+   <repositories>
+     <repository>https://repo.pubmatic.com/artifactory/public-repos</repository>
+   </repositories>
+  </androidPackage>
+</androidPackages>
+
+</dependencies>
