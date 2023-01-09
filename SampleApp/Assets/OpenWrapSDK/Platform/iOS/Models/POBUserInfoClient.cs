@@ -30,7 +30,6 @@ namespace OpenWrapSDK.iOS
         #region Private members
         // Reference to iOS's POBUserInfo instance
         private IntPtr userInfoPtr;
-        private readonly string Tag = "POBUserInfoClient";
         #endregion
 
         #region iOS Plugin Methods
@@ -122,7 +121,7 @@ namespace OpenWrapSDK.iOS
             {
                 if (userInfoPtr != IntPtr.Zero)
                 {
-                    POBUSetUserInfoGender(userInfoPtr, (int)value);
+                    POBUSetUserInfoBirthYear(userInfoPtr, (int)value);
                 }
             }
         }
@@ -223,7 +222,6 @@ namespace OpenWrapSDK.iOS
                 IntPtr dataProviderPtr = dataProvider.dataProviderClient.GetNativePtr();
                 if (dataProviderPtr != null)
                 {
-                    POBLog.Info(Tag, POBLogStrings.UserInfoAddDataProvider);
                     POBUUserInfoAddDataProvider(userInfoPtr, dataProviderPtr);
                 }
             }
@@ -236,7 +234,6 @@ namespace OpenWrapSDK.iOS
         {
             if (userInfoPtr != IntPtr.Zero)
             {
-                POBLog.Info(Tag, POBLogStrings.UserInfoRemoveAllDataProviders);
                 POBUUserInfoRemoveAllDataProviders(userInfoPtr);
             }
         }
@@ -252,7 +249,6 @@ namespace OpenWrapSDK.iOS
                 IntPtr dataProviderPtr = dataProvider.dataProviderClient.GetNativePtr();
                 if (dataProviderPtr != IntPtr.Zero)
                 {
-                    POBLog.Info(Tag, POBLogStrings.UserInfoRemoveDataProvider);
                     POBUUserInfoRemoveDataProvider(userInfoPtr, dataProviderPtr);
                 }
             }
@@ -274,7 +270,6 @@ namespace OpenWrapSDK.iOS
         {
             if (userInfoPtr != IntPtr.Zero)
             {
-                POBLog.Info(Tag, POBLogStrings.DestroyUserInfo);
                 POBUDestroyUserInfo(userInfoPtr);
                 userInfoPtr = IntPtr.Zero;
             }

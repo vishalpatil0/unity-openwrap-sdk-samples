@@ -30,11 +30,9 @@ namespace OpenWrapSDK.iOS
         /// <returns>POBErrorEventArgs instance</returns>
         internal static POBErrorEventArgs ConvertToPOBErrorEventArgs(int errorCode, string errorMessage)
         {
-            POBErrorEventArgs errorEventArgs = new POBErrorEventArgs
-            {
-                ErrorCode = errorCode,
-                Message = errorMessage
-            };
+            POBErrorEventArgs errorEventArgs = new POBErrorEventArgs();
+            errorEventArgs.ErrorCode = errorCode;
+            errorEventArgs.Message = errorMessage;
             return errorEventArgs;
         }
 

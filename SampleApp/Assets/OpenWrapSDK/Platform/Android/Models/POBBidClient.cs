@@ -18,7 +18,6 @@
 
 using System.Collections.Generic;
 using UnityEngine;
-using OpenWrapSDK.Common;
 
 namespace OpenWrapSDK.Android
 {
@@ -27,10 +26,8 @@ namespace OpenWrapSDK.Android
     /// </summary>
     internal class POBBidClient : IPOBBid
     {
-        #region Private Variables
-        private readonly string Tag = "POBBidClient";
-        private readonly AndroidJavaObject bidObject;
-        #endregion
+        private AndroidJavaObject bidObject;
+
 
         /// <summary>
         /// Constructor of POBBid Client
@@ -47,11 +44,7 @@ namespace OpenWrapSDK.Android
         /// <returns>creative id</returns>
         public string GetCreativeId()
         {
-            if (bidObject != null)
-            {
-                return bidObject.Call<string>("getCreativeId");
-            }
-            return null;
+            return bidObject.Call<string>("getCreativeId");
         }
 
         /// <summary>
@@ -60,11 +53,7 @@ namespace OpenWrapSDK.Android
         /// <returns>creative tag</returns>
         public string GetCreativeTag()
         {
-            if (bidObject != null)
-            {
-                return bidObject.Call<string>("getCreative");
-            }
-            return null;
+            return bidObject.Call<string>("getCreative");
         }
 
         /// <summary>
@@ -73,11 +62,7 @@ namespace OpenWrapSDK.Android
         /// <returns>creative type</returns>
         public string GetCreativeType()
         {
-            if (bidObject != null)
-            {
-                return bidObject.Call<string>("getCreativeType");
-            }
-            return null;
+            return bidObject.Call<string>("getCreativeType");
         }
 
         /// <summary>
@@ -86,11 +71,7 @@ namespace OpenWrapSDK.Android
         /// <returns>deal id</returns>
         public string GetDealId()
         {
-            if (bidObject != null)
-            {
-                return bidObject.Call<string>("getDealId");
-            }
-            return null;
+            return bidObject.Call<string>("getDealId");
         }
 
         /// <summary>
@@ -99,11 +80,7 @@ namespace OpenWrapSDK.Android
         /// <returns>boolean vanlue if bid win</returns>
         public bool GetHasWon()
         {
-            if (bidObject != null)
-            {
-                return bidObject.Call<bool>("hasWon");
-            }
-            return false;
+            return bidObject.Call<bool>("hasWon");
         }
 
         /// <summary>
@@ -112,11 +89,7 @@ namespace OpenWrapSDK.Android
         /// <returns>height</returns>
         public int GetHeight()
         {
-            if (bidObject != null)
-            {
-                return bidObject.Call<int>("getHeight");
-            }
-            return 0;
+            return bidObject.Call<int>("getHeight");
         }
 
         /// <summary>
@@ -125,11 +98,7 @@ namespace OpenWrapSDK.Android
         /// <returns>Name of the winning partner</returns>
         public string GetPartner()
         {
-            if (bidObject != null)
-            {
-                return bidObject.Call<string>("getPartnerName");
-            }
-            return null;
+            return bidObject.Call<string>("getPartnerName");
         }
 
         /// <summary>
@@ -139,11 +108,7 @@ namespace OpenWrapSDK.Android
         /// <returns>net ecm/price</returns>
         public double GetPrice()
         {
-            if (bidObject != null)
-            {
-                return bidObject.Call<double>("getPrice");
-            }
-            return 0;
+            return bidObject.Call<double>("getPrice");
         }
 
         /// <summary>
@@ -152,11 +117,7 @@ namespace OpenWrapSDK.Android
         /// <returns>partner id</returns>
         public string GetPubmaticPartnerId()
         {
-            if (bidObject != null)
-            {
-                return bidObject.Call<string>("getPartnerId");
-            }
-            return null;
+            return bidObject.Call<string>("getPartnerId");
         }
 
         /// <summary>
@@ -165,11 +126,7 @@ namespace OpenWrapSDK.Android
         /// <returns>status</returns>
         public int GetStatus()
         {
-            if (bidObject != null)
-            {
-                return bidObject.Call<int>("getStatus");
-            }
-            return 0;
+            return bidObject.Call<int>("getStatus");
         }
 
         /// <summary>
@@ -178,14 +135,10 @@ namespace OpenWrapSDK.Android
         /// <returns>targeting info</returns>
         public Dictionary<string, string> GetTargetingInfo()
         {
-            if (bidObject != null)
-            {
-                AndroidJavaObject targetingInfo = bidObject.Call<AndroidJavaObject>("getTargetingInfo");
-                Dictionary<string, string> targetingMap = POBAndroidUtils.ConvertJavaMapToDictionary<string, string>(targetingInfo);
+            AndroidJavaObject targetingInfo = bidObject.Call<AndroidJavaObject>("getTargetingInfo");
+            Dictionary<string, string> targetingMap = POBAndroidUtils.ConvertJavaMapToDictionary<string,string>(targetingInfo);
 
-                return targetingMap;
-            }
-            return null;
+            return targetingMap;
 
         }
 
@@ -195,11 +148,7 @@ namespace OpenWrapSDK.Android
         /// <returns>width</returns>
         public int GetWidth()
         {
-            if (bidObject != null)
-            {
-                return bidObject.Call<int>("getWidth");
-            }
-            return 0;
+            return bidObject.Call<int>("getWidth");
         }
 
         /// <summary>
@@ -208,12 +157,7 @@ namespace OpenWrapSDK.Android
         /// <returns>bid expiry state</returns>
         public bool IsExpired()
         {
-            if (bidObject != null)
-            {
-                POBLog.Info(Tag, POBLogStrings.ClientIsExpiredLog);
-                return bidObject.Call<bool>("isExpired");
-            }
-            return false;
+            return bidObject.Call<bool>("isExpired");
         }
 
         /// <summary>
@@ -222,10 +166,7 @@ namespace OpenWrapSDK.Android
         /// <param name="hasWon">bid win status</param>
         public void SetHasWon(bool hasWon)
         {
-            if (bidObject != null)
-            {
-                bidObject.Call("setHasWon", hasWon);
-            }
+            bidObject.Call("setHasWon",hasWon);
         }
 
         /// <summary>
@@ -234,11 +175,7 @@ namespace OpenWrapSDK.Android
         /// <returns>bid id</returns>
         public string GetBidId()
         {
-            if (bidObject != null)
-            {
-                return bidObject.Call<string>("getId");
-            }
-            return null;
+            return bidObject.Call<string>("getId");
         }
 
         /// <summary>
@@ -247,20 +184,12 @@ namespace OpenWrapSDK.Android
         /// <returns>gross price</returns>
         public double GetGrossPrice()
         {
-            if (bidObject != null)
-            {
-                return bidObject.Call<double>("getGrossPrice");
-            }
-            return 0;
+            return bidObject.Call<double>("getGrossPrice");
         }
 
         public override string ToString()
         {
-            if (bidObject != null)
-            {
-                return bidObject.Call<string>("toString");
-            }
-            return null;
+            return bidObject.Call<string>("toString");
         }
     }
 }

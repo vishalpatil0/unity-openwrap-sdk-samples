@@ -80,6 +80,9 @@ void POBUUserInfoRemoveDataProvider(POBUUserInfoRef userInfo, POBUTypeDataProvid
     POBUserInfo *internalUserInfo = (__bridge POBUserInfo *)userInfo;
     POBDataProvider *internalDataProvider = (__bridge POBDataProvider *)dataProvider;
     
+    // Keep the data provider in the cache until it is destroyed, as publisher can reuse it to add/update again.
+    [[POBUAdsCacheManager manager] addObject:internalDataProvider];
+    
     // Remove the data provider from the userinfo
     [internalUserInfo removeDataProviderWithName:internalDataProvider.name];
 }
@@ -191,21 +194,7 @@ const char ** POBUBidGetTargetingKeys(POBUTypeBidRef bid) {
 // Get list of targeting values
 const char ** POBUBidGetTargetingValues(POBUTypeBidRef bid) {
     POBBid *internalBid = (__bridge POBBid *)bid;
-    NSArray *keys = internalBid.targetingInfo.allKeys;
-    NSMutableArray *values = [NSMutableArray new];
-    
-    // The targeting value can be of any data type, so convert it into string, as expected by Unity API.
-    for (NSString *key in keys) {
-        id value = [internalBid.targetingInfo valueForKey:key];
-        if ([value isKindOfClass:[NSString class]]) {
-            [values addObject:value];
-        } else if ([value isKindOfClass:[NSNumber class]]) {
-            [values addObject:((NSNumber *)value).stringValue];
-        }
-        // For other type of values e.g. dictionary, array, objects, they are not yet expected
-        // as part of targeting, so ignoring them.
-    }
-    return [POBUUtil POBUCStringsArrayFrom:values];
+    return [POBUUtil POBUCStringsArrayFrom:internalBid.targetingInfo.allValues];
 }
 
 // Get count of targeting key-value pairs
@@ -408,6 +397,9 @@ void POBUAddSegment(POBUTypeDataProviderRef dataProvider, POBUTypeSegmentRef seg
 void POBURemoveSegment(POBUTypeDataProviderRef dataProvider, POBUTypeSegmentRef segment) {
     POBDataProvider *internalDataProvider = (__bridge POBDataProvider *)dataProvider;
     POBSegment *internalSegment = (__bridge POBSegment *)segment;
+    
+    // Keep the segment in the cache until it is destroyed, as publisher can reuse it to add/update again.
+    [[POBUAdsCacheManager manager] addObject:internalSegment];
     
     // remove it from the data provider
     [internalDataProvider removeSegmentForId:internalSegment.identifier];

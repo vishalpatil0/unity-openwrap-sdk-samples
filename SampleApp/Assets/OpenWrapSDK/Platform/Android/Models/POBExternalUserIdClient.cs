@@ -28,10 +28,9 @@ namespace OpenWrapSDK.Android
 
     internal class POBExternalUserIdClient : IPOBExternalUserId
     {
-        #region Private variable
-        private readonly string Tag = "POBExternalUserIdClient";
+
         private AndroidJavaObject externalUserIdObject;
-        #endregion
+       
 
         #region Constructor/Destructor
         /// <summary>
@@ -88,7 +87,6 @@ namespace OpenWrapSDK.Android
         /// </summary>
         public void Destroy()
         {
-            POBLog.Info(Tag, POBLogStrings.ClientDestroyLog);
             externalUserIdObject = null;
         }
 

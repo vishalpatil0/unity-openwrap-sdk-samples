@@ -229,7 +229,7 @@ namespace OpenWrapSDK
             if (bannerClient != null)
             {
                 bannerClient.Destroy();
-            }
+            }  
         }
         #endregion
 
@@ -243,32 +243,50 @@ namespace OpenWrapSDK
             {
                 bannerClient.OnAdLoaded += (sender, args) =>
                 {
-                    OnAdLoaded?.Invoke(this, args);
+                    if (OnAdLoaded != null)
+                    {
+                        OnAdLoaded(this, args);
+                    }
                 };
 
                 bannerClient.OnAdFailedToLoad += (sender, args) =>
                 {
-                    OnAdFailedToLoad?.Invoke(this, args);
+                    if (OnAdFailedToLoad != null)
+                    {
+                        OnAdFailedToLoad(this, args);
+                    }
                 };
 
                 bannerClient.OnAdOpened += (sender, args) =>
                 {
-                    OnAdOpened?.Invoke(this, args);
+                    if (OnAdOpened != null)
+                    {
+                        OnAdOpened(this, args);
+                    }
                 };
 
                 bannerClient.OnAdClosed += (sender, args) =>
                 {
-                    OnAdClosed?.Invoke(this, args);
+                    if (OnAdClosed != null)
+                    {
+                        OnAdClosed(this, args);
+                    }
                 };
 
                 bannerClient.OnAdClicked += (sender, args) =>
                 {
-                    OnAdClicked?.Invoke(this, args);
+                    if (OnAdClicked != null)
+                    {
+                        OnAdClicked(this, args);
+                    }
                 };
 
                 bannerClient.OnAppLeaving += (sender, args) =>
                 {
-                    OnAppLeaving?.Invoke(this, args);
+                    if (OnAppLeaving != null)
+                    {
+                        OnAppLeaving(this, args);
+                    }
                 };
             }
         }

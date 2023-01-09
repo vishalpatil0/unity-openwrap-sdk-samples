@@ -30,12 +30,12 @@ namespace OpenWrapSDK.iOS
         #region Private variables
         private IntPtr interstitiaClientPtr = IntPtr.Zero;
         private IntPtr interstitialPtr = IntPtr.Zero;
-        private readonly IntPtr impressionPtr = IntPtr.Zero;
-        private readonly IntPtr requestPtr = IntPtr.Zero;
+        private IntPtr impressionPtr = IntPtr.Zero;
+        private IntPtr requestPtr = IntPtr.Zero;
+
         private IPOBImpression impression;
-        private readonly IPOBRequest request;
-        private readonly POBBidClient bid;
-        private readonly string Tag = "POBInterstitialClient";
+        private IPOBRequest request;
+        private POBBidClient bid;
         #endregion
 
         #region Constructors/Destructor
@@ -50,7 +50,6 @@ namespace OpenWrapSDK.iOS
             CreateInterstitial(publisherId, profileId, adUnitId);
 
             // Get request
-            POBLog.Info(Tag, POBLogStrings.GetInterstitialRequest);
             requestPtr = POBUGetInterstitialRequest(interstitialPtr);
             request = new POBRequestClient(requestPtr);
 
@@ -58,7 +57,6 @@ namespace OpenWrapSDK.iOS
             bid = new POBBidClient();
 
             // Get impression
-            POBLog.Info(Tag, POBLogStrings.GetInterstitialImpression);
             impressionPtr = POBUGetInterstitialImpression(interstitialPtr);
             impression = new POBImpressionClient(impressionPtr);
         }
@@ -284,7 +282,6 @@ namespace OpenWrapSDK.iOS
         /// </summary>
         public void LoadAd()
         {
-            POBLog.Info(Tag, POBLogStrings.LoadInterstitial);
             POBULoadInterstitial(interstitialPtr);
         }
 
@@ -293,7 +290,6 @@ namespace OpenWrapSDK.iOS
         /// </summary>
         public void ShowAd()
         {
-            POBLog.Info(Tag, POBLogStrings.ShowInterstitial);
             POBUShowInterstitial(interstitialPtr);
         }
 
@@ -304,7 +300,6 @@ namespace OpenWrapSDK.iOS
         {
             if (interstitialPtr != IntPtr.Zero)
             {
-                POBLog.Info(Tag, POBLogStrings.DestroyInterstitial);
                 POBUDestroyInterstitial(interstitialPtr);
                 interstitialPtr = IntPtr.Zero;
             }
@@ -327,8 +322,8 @@ namespace OpenWrapSDK.iOS
         private void CreateInterstitial(string publisherId, int profileId, string adUnitId)
         {
             interstitiaClientPtr = (IntPtr)GCHandle.Alloc(this);
-            POBLog.Info(Tag, POBLogStrings.CreateInterstitial);
             interstitialPtr = POBUCreateInterstitial(interstitiaClientPtr, publisherId, profileId, adUnitId);
+
             POBUSetInterstitialCallbacks(interstitialPtr,
                 InterstitialDidReceiveAdCallback,
                 InterstitialDidFailToLoadAd,
@@ -338,6 +333,7 @@ namespace OpenWrapSDK.iOS
                 InterstitialWillLeaveApplication,
                 InterstitialDidClickAd,
                 InterstitialDidExpireAd);
+
             POBUSetVideoInterstitialCallbacks(interstitialPtr, InterstitialVideoPlaybackCompleted);
         }
 

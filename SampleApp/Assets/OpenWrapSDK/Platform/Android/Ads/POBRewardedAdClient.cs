@@ -27,10 +27,8 @@ namespace OpenWrapSDK.Android
     /// </summary>
     internal class POBRewardedAdClient: AndroidJavaProxy, IPOBRewardedAdClient
     {
-        #region Private variables
-        private readonly string Tag = "POBRewardedAdClient";
         private readonly AndroidJavaObject androidRewardedAd;
-        #endregion
+
         #region Constructors/Destructor
         /// Private constructor to avoid direct instance creation, To create instance of
         /// POBRewardedAdClient use POBRewardedAdClient.GetRewardedAdClient() method.
@@ -42,8 +40,6 @@ namespace OpenWrapSDK.Android
             this.androidRewardedAd = androidRewardedAd;
             // Set listener to receive Rewarded Ad event calls
             this.androidRewardedAd.Call("setListener", this);
-            // Initialize the event dispatcher
-            POBEventsDispatcher.Initialize();
         }
 
         /// <summary>
@@ -125,16 +121,7 @@ namespace OpenWrapSDK.Android
 
 
         #region IPOBRewardedAdClient APIs
-
-        /// <summary>
-        /// Getter for OpenWrap rewarded ad POBBid
-        /// </summary>
-        /// <returns>Instance of POBBid</returns>
-        public IPOBBid GetBid()
-        {
-            return new POBBidClient(this.androidRewardedAd.Call<AndroidJavaObject>("getBid"));
-        }
-
+        
         /// <summary>
         /// To get the rewarded ad impression
         /// </summary>
@@ -159,7 +146,6 @@ namespace OpenWrapSDK.Android
         /// <returns>is ready status</returns>
         public bool IsReady()
         {
-            POBLog.Info(Tag, POBLogStrings.ClientIsReadyLog);
             return this.androidRewardedAd.Call<bool>("isReady");
         }
 
@@ -168,7 +154,6 @@ namespace OpenWrapSDK.Android
         /// </summary>
         public void LoadAd()
         {
-            POBLog.Info(Tag, POBLogStrings.ClientLoadAdLog);
             this.androidRewardedAd.Call("loadAd");
         }
 
@@ -177,7 +162,6 @@ namespace OpenWrapSDK.Android
         /// </summary>
         public void ShowAd()
         {
-            POBLog.Info(Tag, POBLogStrings.ClientShowAdLog);
             this.androidRewardedAd.Call("show");
         }
 
@@ -198,7 +182,6 @@ namespace OpenWrapSDK.Android
         /// </summary>
         public void Destroy()
         {
-            POBLog.Info(Tag, POBLogStrings.ClientDestroyLog);
             this.androidRewardedAd.Call("destroy");
         }
         #endregion
@@ -211,10 +194,7 @@ namespace OpenWrapSDK.Android
         {
             if (OnAdLoaded != null)
             {
-                POBEventsDispatcher.ScheduleInUpdate(() => {
-                    OnAdLoaded(this, EventArgs.Empty);
-                });
-                
+                OnAdLoaded(this, EventArgs.Empty);
             }
         }
 
@@ -225,10 +205,7 @@ namespace OpenWrapSDK.Android
         {
             if (OnAdFailedToLoad != null)
             {
-                POBEventsDispatcher.ScheduleInUpdate(() => {
-                    OnAdFailedToLoad(this, POBAndroidUtils.ConvertToPOBErrorEventArgs(error));
-                });
-                
+                OnAdFailedToLoad(this, POBAndroidUtils.ConvertToPOBErrorEventArgs(error));
             }
         }
 
@@ -240,10 +217,7 @@ namespace OpenWrapSDK.Android
         {
             if (OnAdFailedToShow != null)
             {
-                POBEventsDispatcher.ScheduleInUpdate(() => {
-                    OnAdFailedToShow(this, POBAndroidUtils.ConvertToPOBErrorEventArgs(error));
-                });
-                
+                OnAdFailedToShow(this, POBAndroidUtils.ConvertToPOBErrorEventArgs(error));
             }
         }
 
@@ -254,10 +228,7 @@ namespace OpenWrapSDK.Android
         {
             if (OnAppLeaving != null)
             {
-                POBEventsDispatcher.ScheduleInUpdate(() => {
-                    OnAppLeaving(this, EventArgs.Empty);
-                });
-                
+                OnAppLeaving(this, EventArgs.Empty);
             }
         }
 
@@ -268,10 +239,7 @@ namespace OpenWrapSDK.Android
         {
             if (OnAdOpened != null)
             {
-                POBEventsDispatcher.ScheduleInUpdate(() => {
-                    OnAdOpened(this, EventArgs.Empty);
-                });
-                
+                OnAdOpened(this, EventArgs.Empty);
             }
         }
 
@@ -282,9 +250,7 @@ namespace OpenWrapSDK.Android
         {
             if (OnAdClosed != null)
             {
-                POBEventsDispatcher.ScheduleInUpdate(() => {
-                    OnAdClosed(this, EventArgs.Empty);
-                });
+                OnAdClosed(this, EventArgs.Empty);
             }
         }
 
@@ -295,10 +261,7 @@ namespace OpenWrapSDK.Android
         {
             if (OnAdClicked != null)
             {
-                POBEventsDispatcher.ScheduleInUpdate(() => {
-                    OnAdClicked(this, EventArgs.Empty);
-                });
-                
+                OnAdClicked(this, EventArgs.Empty);
             }
         }
 
@@ -309,10 +272,7 @@ namespace OpenWrapSDK.Android
         {
             if (OnAdExpired != null)
             {
-                POBEventsDispatcher.ScheduleInUpdate(() => {
-                    OnAdExpired(this, EventArgs.Empty);
-                });
-                
+                OnAdExpired(this, EventArgs.Empty);
             }
         }
 
@@ -326,12 +286,13 @@ namespace OpenWrapSDK.Android
             if (OnReceiveReward != null)
             {
                 POBRewardEventArgs rewardEventArgs = POBAndroidUtils.GetPOBRewardEventArgs(reward);
-                POBEventsDispatcher.ScheduleInUpdate(() => {
-                    OnReceiveReward(this, rewardEventArgs);
-                });
-                
-                
+                OnReceiveReward(this, rewardEventArgs);
             }
+        }
+
+        public IPOBBid GetBid()
+        {
+            throw new NotImplementedException();
         }
         #endregion
     }

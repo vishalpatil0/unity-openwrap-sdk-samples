@@ -27,7 +27,7 @@ namespace OpenWrapSDK.iOS
     internal class POBRequestClient : IPOBRequest
     {
         // Reference to iOS's POBRequest
-        private readonly IntPtr requestPtr;
+        IntPtr requestPtr;
 
         /// <summary>
         /// Constructor

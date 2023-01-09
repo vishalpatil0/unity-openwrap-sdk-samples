@@ -20,9 +20,8 @@
 using System;
 #endif
 using System.Collections.Generic;
-#if UNITY_ANDROID
 using UnityEngine;
-#endif
+
 namespace OpenWrapSDK.Common
 {
     public interface IPOBExternalUserId

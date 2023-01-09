@@ -19,7 +19,6 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using OpenWrapSDK.Common;
 
 namespace OpenWrapSDK.iOS
 {
@@ -31,8 +30,6 @@ namespace OpenWrapSDK.iOS
         #region Private variables
         /// Reference of POBBid instance from OpenWrap SDK
         private IntPtr bidPtr;
-        private readonly string Tag = "POBBidClient";
-
         #endregion
 
         #region Internal methods
@@ -44,7 +41,6 @@ namespace OpenWrapSDK.iOS
         {
             bidPtr = bid;
         }
-
         #endregion
 
         #region iOS Plugin imports
@@ -239,14 +235,12 @@ namespace OpenWrapSDK.iOS
         /// <returns>Dictionary of standard key-value pairs for targeting</returns>
         public Dictionary<string, string> GetTargetingInfo()
         {
-            POBLog.Info(Tag, POBLogStrings.BidGetTargetingKeys);
             IntPtr targetingKeysPtr = POBUBidGetTargetingKeys(bidPtr);
-            POBLog.Info(Tag, POBLogStrings.BidGetTargetingValues);
             IntPtr targetingValuesPtr = POBUBidGetTargetingValues(bidPtr);
             int targetingCount = POBUBidGetTargetingCount(bidPtr);
 
-            List<string> targetingKeys = PtrArrayToStringsList(targetingKeysPtr, targetingCount);
-            List<string> targetingValues = PtrArrayToStringsList(targetingValuesPtr, targetingCount);
+            List<string> targetingKeys = POBBidClient.PtrArrayToStringsList(targetingKeysPtr, targetingCount);
+            List<string> targetingValues = POBBidClient.PtrArrayToStringsList(targetingValuesPtr, targetingCount);
 
             // Re-create the dictionary from the targeting keys, values list
             Dictionary<string, string> targetingDict = new Dictionary<string, string>();
@@ -256,7 +250,6 @@ namespace OpenWrapSDK.iOS
                 string value = targetingValues[i];
                 if (key != null && value != null)
                 {
-                    POBLog.Info(Tag,POBLogStrings.Targetting);
                     targetingDict.Add(key, value);
                 }
             }
@@ -271,7 +264,6 @@ namespace OpenWrapSDK.iOS
         /// <returns>bool value</returns>
         public bool IsExpired()
         {
-            POBLog.Info(Tag, POBLogStrings.BidIsExpired);
             return POBUBidIsExpired(bidPtr);
         }
         #endregion

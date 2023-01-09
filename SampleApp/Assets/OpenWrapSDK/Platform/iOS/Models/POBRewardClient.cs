@@ -16,6 +16,9 @@
 * TO REPRODUCE, DISCLOSE OR DISTRIBUTE ITS CONTENTS, OR TO MANUFACTURE, USE, OR SELL ANYTHING THAT IT  MAY DESCRIBE, IN WHOLE OR IN PART.
 */
 
+using UnityEngine;
+using System;
+
 namespace OpenWrapSDK.iOS
 {
     /// <summary>
@@ -23,9 +26,9 @@ namespace OpenWrapSDK.iOS
     /// </summary>
     internal class POBRewardClient : IPOBReward
     {
-        private readonly string currencyType;
+        private string currencyType;
 
-        private readonly int amount;
+        private int amount;
 
         internal POBRewardClient(int amount, string currencyType)
         {

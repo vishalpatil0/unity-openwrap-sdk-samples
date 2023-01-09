@@ -31,7 +31,6 @@ namespace OpenWrapSDK.iOS
 
         /// Reference to iOS's POBSegment
         private IntPtr segmentPtr = IntPtr.Zero;
-        private readonly string Tag = "POBSegmentClient";
         #endregion
 
         #region iOS Plugin methods
@@ -61,18 +60,7 @@ namespace OpenWrapSDK.iOS
         /// </summary>
         ~POBSegmentClient()
         {
-            if (segmentPtr != IntPtr.Zero)
-            {
-                POBLog.Info(Tag, POBLogStrings.DestroySegment);
-                // In a case - 
-                // When any publisher creates segment in C#, it's Obj-C instance gets added in iOS's local cache
-                // maintained by plugin.
-                // If it is not added further in POBDataProvider and destructor of C# instance is called, cleanup of C# object is done properly
-                // but the Obj-C instance stored in iOS's local cache is not removed automatically, which results in memory leak.
-                // To avoid this, it is MANDATORY to call destroy manually from destructor.
-                POBUDestroySegment(segmentPtr);
-                segmentPtr = IntPtr.Zero;
-            }
+            Destroy();
         }
         #endregion
 
@@ -105,11 +93,11 @@ namespace OpenWrapSDK.iOS
         /// </summary>
         public void Destroy()
         {
-            // This is a cleanup API, which is expected to be used only by internal classes.
-            // When any segment is removed from native iOS, it's Objective-C instance also gets deallocated
-            // as no other object retains it. So we MUST cleanup it's reference from this client class
-            // as soon as it is removed, to avoid dangling pointer access in future.
-            segmentPtr = IntPtr.Zero;
+            if (segmentPtr != IntPtr.Zero)
+            {
+                POBUDestroySegment(segmentPtr);
+                segmentPtr = IntPtr.Zero;
+            }
         }
         #endregion
     }

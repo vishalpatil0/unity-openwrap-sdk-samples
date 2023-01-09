@@ -28,7 +28,6 @@ namespace OpenWrapSDK
     public class POBUserInfo
     {
         #region Private members
-        private readonly string Tag = "POBUserInfo";
         internal IPOBUserInfoClient client;
         private List<POBDataProvider> dataProviders;
 
@@ -62,29 +61,11 @@ namespace OpenWrapSDK
                 client = null;
             }
 
-            ClearDataProviders();
-            dataProviders = null;
-        }
-        #endregion
-
-        #region Private methods
-        /// <summary>
-        /// Clear data providers list
-        /// </summary>
-        private void ClearDataProviders()
-        {
             // Clear data providers list.
-            if (dataProviders != null && dataProviders.Count > 0)
+            if (dataProviders != null)
             {
-                // Call destroy on each dataprovider to cleanup the native instances,
-                // which will prevent accessing dangling pointers in future.
-                foreach (POBDataProvider dataProvider in dataProviders)
-                {
-                    dataProvider.Destroy();
-                }
-
-                // Clear the local list of C# dataprovider instances
                 dataProviders.Clear();
+                dataProviders = null;
             }
         }
         #endregion
@@ -97,7 +78,10 @@ namespace OpenWrapSDK
         /// </summary>
         public int BirthYear
         {
-            get => birthYear;
+            get
+            {
+                return birthYear;
+            }
 
             set
             {
@@ -118,7 +102,10 @@ namespace OpenWrapSDK
         /// </summary>
         public POBGender Gender
         {
-            get => gender;
+            get
+            {
+                return gender;
+            }
 
             set
             {
@@ -135,7 +122,10 @@ namespace OpenWrapSDK
         /// </summary>
         public string Country
         {
-            get => country;
+            get
+            {
+                return country;
+            }
 
             set
             {
@@ -152,7 +142,10 @@ namespace OpenWrapSDK
         /// </summary>
         public string City
         {
-            get => city;
+            get
+            {
+                return city;
+            }
 
             set
             {
@@ -170,7 +163,10 @@ namespace OpenWrapSDK
         /// </summary>
         public string Metro
         {
-            get => metro;
+            get
+            {
+                return metro;
+            }
 
             set
             {
@@ -186,7 +182,10 @@ namespace OpenWrapSDK
         /// </summary>
         public string Zip
         {
-            get => zip;
+            get
+            {
+                return zip;
+            }
 
             set
             {
@@ -203,7 +202,10 @@ namespace OpenWrapSDK
         /// </summary>
         public string Region
         {
-            get => region;
+            get
+            {
+                return region;
+            }
 
             set
             {
@@ -220,7 +222,10 @@ namespace OpenWrapSDK
         /// </summary>
         public string Keywords
         {
-            get => keywords;
+            get
+            {
+                return keywords;
+            }
 
             set
             {
@@ -246,7 +251,6 @@ namespace OpenWrapSDK
                     if (!isDuplicate && dataProvider.Name != null &&
                         dataProvider.Name.Length > 0 && dataProvider.GetSegments().Count > 0)
                     {
-                        POBLog.Info(Tag, string.Format(POBLogStrings.AddDataProviderSuccessLog, dataProvider.Identifier));
                         client.AddDataProvider(dataProvider);
                         // Add data provider if it is not yet added
                         dataProviders.Add(dataProvider);
@@ -264,18 +268,12 @@ namespace OpenWrapSDK
             if (dataProviders.Count > 0)
             {
                 POBDataProvider dataProvider = dataProviders.Find(provider => provider.Name.Equals(name));
-                POBLog.Info(Tag, string.Format(POBLogStrings.RemoveDataProviderSuccessLog, name));
-                
+                dataProviders.Remove(dataProvider);
+
                 if (client != null)
                 {
                     client.RemoveDataProvider(dataProvider);
                 }
-                _ = dataProviders.Remove(dataProvider);
-                dataProvider.Destroy();
-            }
-            else
-            {
-                POBLog.Warning(Tag, string.Format(POBLogStrings.RemoveDataProviderFailedWithNameLog, name));
             }
         }
 
@@ -284,15 +282,11 @@ namespace OpenWrapSDK
         /// </summary>
         public void RemoveAllDataProviders()
         {
-            POBLog.Info(Tag, POBLogStrings.RemoveAllDataProvidersLog);
-
+            dataProviders.Clear();
             if (client != null)
             {
                 client.RemoveAllDataProviders();
             }
-
-            // Clear data providers
-            ClearDataProviders();
         }
 
         /// <summary>

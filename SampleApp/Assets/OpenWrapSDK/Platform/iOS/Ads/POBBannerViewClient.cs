@@ -30,12 +30,12 @@ namespace OpenWrapSDK.iOS
         #region Private variables
         private IntPtr bannerViewClientPtr = IntPtr.Zero;
         private IntPtr bannerViewPtr = IntPtr.Zero;
-        private readonly IntPtr impressionPtr = IntPtr.Zero;
-        private readonly IntPtr requestPtr = IntPtr.Zero;
-        private readonly IPOBImpression impression;
-        private readonly IPOBRequest request;
-        private readonly POBBidClient bid;
-        private readonly string Tag = "POBBannerViewClient";
+        private IntPtr impressionPtr = IntPtr.Zero;
+        private IntPtr requestPtr = IntPtr.Zero;
+
+        private IPOBImpression impression;
+        private IPOBRequest request;
+        private POBBidClient bid;
         #endregion
 
         #region Constructors/Destructor
@@ -53,9 +53,8 @@ namespace OpenWrapSDK.iOS
             POBAdSize adSize)
         {
             CreateBannerView(publisherId, profileId, adUnitId, adSize);
-
+            
             // Get request
-            POBLog.Info(Tag, POBLogStrings.GetBannerRequest);
             requestPtr = POBUGetBannerRequest(bannerViewPtr);
             request = new POBRequestClient(requestPtr);
 
@@ -63,7 +62,6 @@ namespace OpenWrapSDK.iOS
             bid = new POBBidClient();
 
             // Get impression
-            POBLog.Info(Tag, POBLogStrings.GetBannerImpression);
             impressionPtr = POBUGetBannerImpression(bannerViewPtr);
             impression = new POBImpressionClient(impressionPtr);
         }
@@ -213,7 +211,6 @@ namespace OpenWrapSDK.iOS
         {
             if (bannerViewPtr != IntPtr.Zero)
             {
-                POBLog.Info(Tag, POBLogStrings.DestroyBanner);
                 POBUDestroyBanner(bannerViewPtr);
                 bannerViewPtr = IntPtr.Zero;
             }
@@ -230,7 +227,6 @@ namespace OpenWrapSDK.iOS
         /// <returns>Instance of POBBid</returns>
         public IPOBBid GetBid()
         {
-            POBLog.Info(Tag, POBLogStrings.GetBannerBid);
             IntPtr bidPtr = POBUGetBannerBid(bannerViewPtr);
             bid.SetBid(bidPtr);
             return bid;
@@ -268,14 +264,13 @@ namespace OpenWrapSDK.iOS
         /// <returns>Ad size as POBAdSize</returns>
         public POBAdSize GetCreativeSize()
         {
-            POBLog.Info(Tag, POBLogStrings.GetBannerCreativeSize);
             string adSizeStr = POBUGetBannerCreativeSize(bannerViewPtr);
             string[] sizes = adSizeStr.Split('x');
 
             if (sizes.Length == 2)
             {
-                int width = int.Parse(sizes[0]);
-                int height = int.Parse(sizes[1]);
+                int width = Int32.Parse((string)sizes[0]);
+                int height = Int32.Parse((string)sizes[1]);
                 POBAdSize adSize = new POBAdSize(width, height);
                 return adSize;
             }
@@ -288,8 +283,7 @@ namespace OpenWrapSDK.iOS
         /// <param name="position">Banner position</param>
         public void SetBannerPosition(POBBannerPosition position)
         {
-            POBLog.Info(Tag, POBLogStrings.SetBannerPosition);
-            POBUSetBannerPosition(bannerViewPtr, (int)position);
+            POBUSetBannerPosition(bannerViewPtr, ((int)position));
         }
 
         /// <summary>
@@ -299,7 +293,6 @@ namespace OpenWrapSDK.iOS
         /// <param name="y">y position</param>
         public void SetBannerCustomPosition(float x, float y)
         {
-            POBLog.Info(Tag, POBLogStrings.SetBannerCustomPostion);
             POBUSetBannerCustomPostion(bannerViewPtr, x, y);
         }
 
@@ -308,7 +301,6 @@ namespace OpenWrapSDK.iOS
         /// </summary>
         public void PauseAutoRefresh()
         {
-            POBLog.Info(Tag, POBLogStrings.PauseAutoRefresh);
             POBUPauseAutoRefresh(bannerViewPtr);
         }
 
@@ -317,7 +309,6 @@ namespace OpenWrapSDK.iOS
         /// </summary>
         public void ResumeAutoRefresh()
         {
-            POBLog.Info(Tag, POBLogStrings.ResumeAutoRefresh);
             POBUResumeAutoRefresh(bannerViewPtr);
         }
 
@@ -326,8 +317,7 @@ namespace OpenWrapSDK.iOS
         /// </summary>
         public bool ForceRefresh()
         {
-            POBLog.Info(Tag, POBLogStrings.ForceRefresh);
-            return POBUForceRefresh(bannerViewPtr);
+           return POBUForceRefresh(bannerViewPtr);
         }
         #endregion
 
@@ -346,9 +336,7 @@ namespace OpenWrapSDK.iOS
             POBAdSize adSize)
         {
             bannerViewClientPtr = (IntPtr)GCHandle.Alloc(this);
-            POBLog.Info(Tag, POBLogStrings.CreateBanner);
             bannerViewPtr = POBUCreateBanner(bannerViewClientPtr, publisherId, profileId, adUnitId, adSize.GetWidth(), adSize.GetHeight());
-            POBLog.Info(Tag, POBLogStrings.SetBannerViewCallbacks);
             POBUSetBannerViewCallbacks(bannerViewPtr,
                 BannerViewDidLoadAdCallback,
                 BannerViewDidFailToLoadAd,

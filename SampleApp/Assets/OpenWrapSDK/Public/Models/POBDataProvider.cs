@@ -19,6 +19,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using OpenWrapSDK.Common;
+using UnityEngine;
 
 namespace OpenWrapSDK
 {
@@ -30,9 +31,10 @@ namespace OpenWrapSDK
         #region Private members
         // iOS/Android specific data provider client
         internal IPOBDataProviderClient dataProviderClient;
-        private readonly string Tag = "POBDataProvider";
 
         private Dictionary<string, string> extension;
+        private string identifier;
+        private string name;
         private int segTax;
         private List<POBSegment> segments;
         #endregion
@@ -44,21 +46,14 @@ namespace OpenWrapSDK
         /// <param name="name">Data provider's name</param>
         public POBDataProvider(string name)
         {
-            if (name != null)
-            {
-                Name = name;
-                segments = new List<POBSegment>();
-                extension = new Dictionary<string, string>();
-                #if UNITY_IOS
-                    dataProviderClient = new iOS.POBDataProviderClient(name, null);
-                #else
-                    dataProviderClient = new Android.POBDataProviderClient(name);
-                #endif
-            }
-            else
-            {
-                POBLog.Warning(Tag, POBLogStrings.InvalidName);
-            }
+            this.name = name;
+            segments = new List<POBSegment>();
+            extension = new Dictionary<string, string>();
+#if UNITY_IOS
+            dataProviderClient = new iOS.POBDataProviderClient(name, null);
+#else
+            dataProviderClient = new Android.POBDataProviderClient(name);
+#endif
         }
 
         /// <summary>
@@ -68,22 +63,15 @@ namespace OpenWrapSDK
         /// <param name="identifier">Data provider's id</param>
         public POBDataProvider(string name, string identifier)
         {
-            if (name != null && identifier != null)
-            {
-                Name = name;
-                Identifier = identifier;
-                segments = new List<POBSegment>();
-                extension = new Dictionary<string, string>();
-                #if UNITY_IOS
-                        dataProviderClient = new iOS.POBDataProviderClient(name, identifier);
-                #else
-                        dataProviderClient = new Android.POBDataProviderClient(name, identifier);
-                #endif
-            }
-            else
-            {
-                POBLog.Warning(Tag, POBLogStrings.InvalidNameAndId);
-            }
+            this.name = name;
+            this.identifier = identifier;
+            segments = new List<POBSegment>();
+            extension = new Dictionary<string, string>();
+#if UNITY_IOS
+            dataProviderClient = new iOS.POBDataProviderClient(name, identifier);
+#else
+            dataProviderClient = new Android.POBDataProviderClient(name, identifier);
+#endif
         }
 
         /// <summary>
@@ -91,48 +79,23 @@ namespace OpenWrapSDK
         /// </summary>
         ~POBDataProvider()
         {
-            Destroy();
-        }
-        #endregion
-
-        #region Internal methods
-        internal void Destroy()
-        {
             if (dataProviderClient != null)
             {
                 dataProviderClient.Destroy();
                 dataProviderClient = null;
             }
-
-            ClearSegments();
-            segments = null;
-
-            if (extension != null)
+            // Clear data providers list.
+            if (segments != null)
+            {
+                segments.Clear();
+                segments = null;
+            }
+            if(extension != null)
             {
                 extension.Clear();
                 extension = null;
             }
-        }
-        #endregion
 
-        #region Private methods
-        /// <summary>
-        /// Clear segments list
-        /// </summary>
-        private void ClearSegments()
-        {
-            if (segments != null && segments.Count > 0)
-            {
-                // Call destroy on each segment to cleanup the native instances,
-                // which will prevent accessing dangling pointers in future.
-                foreach (POBSegment segment in segments)
-                {
-                    segment.Destroy();
-                }
-
-                // Clear the local list of C# segment instances
-                segments.Clear();
-            }
         }
         #endregion
 
@@ -140,19 +103,34 @@ namespace OpenWrapSDK
         /// <summary>
         /// Data provider's identifier
         /// </summary>
-        public string Identifier { get; }
+        public string Identifier
+        {
+            get
+            {
+                return identifier;
+            }
+        }
 
         /// <summary>
         /// Data provider's name
         /// </summary>
-        public string Name { get; }
+        public string Name
+        {
+            get
+            {
+                return name;
+            }
+        }
 
         /// <summary>
         /// segment taxonomy id. Reference: https://github.com/InteractiveAdvertisingBureau/AdCOM/blob/master/AdCOM%20v1.0%20FINAL.md#list--category-taxonomies
         /// </summary>
         public int SegTax
         {
-            get => segTax;
+            get
+            {
+                return segTax;
+            }
             set
             {
                 segTax = value;
@@ -168,12 +146,15 @@ namespace OpenWrapSDK
         /// </summary>
         public Dictionary<string, string> Extension
         {
-            get => extension;
+            get
+            {
+                return extension;
+            }
             set
             {
-                if (dataProviderClient != null && value != null)
+                extension = Extension;
+                if (dataProviderClient != null)
                 {
-                    extension = value;
                     dataProviderClient.Extension = value;
                 }
             }
@@ -197,12 +178,12 @@ namespace OpenWrapSDK
                 }
                 else
                 {
-                    POBLog.Warning(Tag, POBLogStrings.DuplicateSegmentNotAllowed);
+                    Debug.Log("POBDataProvider : segments with duplicate id not allowed");
                 }
             }
             else
             {
-                POBLog.Warning(Tag, POBLogStrings.InvalidSegment);
+                Debug.Log("POBDataProvider : segment is null or required fields are not available.");
             }
         }
 
@@ -219,13 +200,12 @@ namespace OpenWrapSDK
                     POBSegment segment = segments.Find(seg => seg.Identifier.Equals(identifier));
                     if (segment != null)
                     {
+                        segments.Remove(segment);
+
                         if (dataProviderClient != null)
                         {
                             dataProviderClient.RemoveSegment(segment);
                         }
-
-                        _ = segments.Remove(segment);
-                        segment.Destroy();
                     }
                 }
             }
@@ -236,12 +216,11 @@ namespace OpenWrapSDK
         /// </summary>
         public void RemoveAllSegments()
         {
+            segments.Clear();
             if (dataProviderClient != null)
             {
                 dataProviderClient.RemoveAllSegments();
             }
-            // Clear segments
-            ClearSegments();
         }
 
         /// <summary>

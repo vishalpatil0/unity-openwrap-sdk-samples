@@ -41,8 +41,8 @@ public class POBPostProcessBuildiOS
             pbxProj.ReadFromString(File.ReadAllText(projPath));
             // Search for "UnityFramework" target
 #if UNITY_2019_3_OR_NEWER
-            string unityMainTargetGuid = pbxProj.GetUnityMainTargetGuid();
-            string unityFrameworkTargetGuid = pbxProj.GetUnityFrameworkTargetGuid();
+            var unityMainTargetGuid = pbxProj.GetUnityMainTargetGuid();
+            var unityFrameworkTargetGuid = pbxProj.GetUnityFrameworkTargetGuid();
 #else
             var unityMainTargetGuid = pbxProj.TargetGuidByName(UnityMainTargetName);
             var unityFrameworkTargetGuid = pbxProj.TargetGuidByName(UnityMainTargetName);

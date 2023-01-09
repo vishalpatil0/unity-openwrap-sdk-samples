@@ -27,18 +27,18 @@ namespace OpenWrapSDK.iOS
     /// </summary>
     internal class POBRewardedAdClient : IPOBRewardedAdClient
     {
-        #region Private variables
+#region Private variables
         private IntPtr rewardedClientPtr = IntPtr.Zero;
         private IntPtr rewardedPtr = IntPtr.Zero;
-        private readonly IntPtr impressionPtr = IntPtr.Zero;
-        private readonly IntPtr requestPtr = IntPtr.Zero;
-        private readonly IPOBImpression impression;
-        private readonly IPOBRequest request;
-        private readonly POBBidClient bid;
-        private readonly string Tag = "POBRewardedAdClient";
-        #endregion
+        private IntPtr impressionPtr = IntPtr.Zero;
+        private IntPtr requestPtr = IntPtr.Zero;
 
-        #region Constructors/Destructor
+        private IPOBImpression impression;
+        private IPOBRequest request;
+        private POBBidClient bid;
+#endregion
+
+#region Constructors/Destructor
         /// <summary>
         /// Method to return POBRewardedAdClient instance
         /// </summary>
@@ -50,6 +50,7 @@ namespace OpenWrapSDK.iOS
         {
             //create native rewarded ad
             IntPtr rewardedPtr = POBUCreateRewardedAd(publisherId, profileId, adUnitId);
+
             if (rewardedPtr != null)
             {
                 //create rewarded ad client 
@@ -64,7 +65,6 @@ namespace OpenWrapSDK.iOS
             rewardedPtr = rewardedNativePtr;
             SetupRewardedAd();
             // Get request
-            POBLog.Info(Tag, POBLogStrings.GetRewardedAdRequest);
             requestPtr = POBUGetRewardedAdRequest(rewardedPtr);
             request = new POBRequestClient(requestPtr);
 
@@ -72,7 +72,6 @@ namespace OpenWrapSDK.iOS
             bid = new POBBidClient();
 
             // Get impression
-            POBLog.Info(Tag, POBLogStrings.GetRewardedAdImpression);
             impressionPtr = POBUGetRewardedAdImpression(rewardedPtr);
             impression = new POBImpressionClient(impressionPtr);
         }
@@ -293,7 +292,6 @@ namespace OpenWrapSDK.iOS
         /// </summary>
         public void LoadAd()
         {
-            POBLog.Info(Tag, POBLogStrings.LoadRewardedAd);
             POBULoadRewardedAd(rewardedPtr);
         }
 
@@ -302,7 +300,6 @@ namespace OpenWrapSDK.iOS
         /// </summary>
         public void ShowAd()
         {
-            POBLog.Info(Tag,POBLogStrings.ShowRewardedAd);
             POBUShowRewardedAd(rewardedPtr);
         }
 
@@ -315,7 +312,6 @@ namespace OpenWrapSDK.iOS
         /// <param name="resumeTitle">resume button title for skip alert</param>
         public void SetSkipAlertInfo(string title, string message, string closeTitle, string resumeTitle)
         {
-            POBLog.Info(Tag, POBLogStrings.SetRewardedSkipAlertInfo);
             POBUSetRewardedSkipAlertInfo(title, message, closeTitle, resumeTitle, rewardedPtr);
         }
 
@@ -326,7 +322,6 @@ namespace OpenWrapSDK.iOS
         {
             if (rewardedPtr != IntPtr.Zero)
             {
-                POBLog.Info(Tag, POBLogStrings.DestroyRewardedAd);
                 POBUDestroyRewardedAd(rewardedPtr);
                 rewardedPtr = IntPtr.Zero;
             }
@@ -347,7 +342,6 @@ namespace OpenWrapSDK.iOS
         {
             rewardedClientPtr = (IntPtr)GCHandle.Alloc(this);
             //Set client ptr to the native obj
-            POBLog.Info(Tag, POBLogStrings.RewardedAdSetClient);
             POBURewardedAdSetClient(rewardedPtr, rewardedClientPtr);
             //rewardedPtr = POBUCreateRewardedAd(rewardedClientPtr, publisherId, profileId, adUnitId);
             POBUSetRewardedAdCallbacks(rewardedPtr,
@@ -376,7 +370,7 @@ namespace OpenWrapSDK.iOS
             }
             return null;
         }
-        #endregion
+#endregion
     }
 }
 #endif

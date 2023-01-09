@@ -27,7 +27,7 @@ namespace OpenWrapSDK.Android
     internal class POBRequestClient : IPOBRequest
     {
         // Reference to Android's POBRequest
-        private readonly AndroidJavaObject RequestObject;
+        private AndroidJavaObject RequestObject;
 
         /// <summary>
         /// Constructor

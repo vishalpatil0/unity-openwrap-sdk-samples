@@ -26,11 +26,11 @@ namespace OpenWrapSDK.Android
     internal class POBRewardClient : IPOBReward
     {
         // Reference to Android's POBRequest
-        private readonly AndroidJavaObject rewardObject;
+        private AndroidJavaObject rewardObject;
 
-        private readonly string currencyType;
+        private string currencyType;
 
-        private readonly int amount;
+        private int amount;
 
         /// <summary>
         /// Constructor

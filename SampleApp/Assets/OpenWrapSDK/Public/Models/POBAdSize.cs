@@ -24,8 +24,8 @@ namespace OpenWrapSDK
     public class POBAdSize
     {
         #region Private variables
-        private readonly int width;
-        private readonly int height;
+        private int width;
+        private int height;
         #endregion
 
         /// <summary>
@@ -78,7 +78,7 @@ namespace OpenWrapSDK
         /// <returns>width</returns>
         public int GetWidth()
         {
-            return width;
+            return this.width;
         }
 
         /// <summary>
@@ -87,15 +87,15 @@ namespace OpenWrapSDK
         /// <returns>height</returns>
         public int GetHeight()
         {
-            return height;
+            return this.height;
         }
 
         /// <summary>
         /// It logs ad size in string format
         /// </summary>
-        public override string ToString()
+        override public string ToString()
         {
-            return width.ToString() + "x" + height.ToString();
+            return this.width.ToString() + "x" + this.height.ToString();
         }
     }
 }

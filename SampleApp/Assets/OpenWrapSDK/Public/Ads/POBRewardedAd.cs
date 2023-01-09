@@ -87,7 +87,6 @@ namespace OpenWrapSDK
         {
             rewardedAdClient = client;
             SetCallbacks();
-
         }
 
         /// <summary>
@@ -202,9 +201,10 @@ namespace OpenWrapSDK
                 /// </summary>
                 rewardedAdClient.OnAdLoaded += (sender, args) =>
                 {
-
-                    OnAdLoaded?.Invoke(this, args);
-
+                    if (OnAdLoaded != null)
+                    {
+                        OnAdLoaded(this, args);
+                    }
                 };
 
                 /// <summary>
@@ -212,7 +212,10 @@ namespace OpenWrapSDK
                 /// </summary>
                 rewardedAdClient.OnAdFailedToLoad += (sender, args) =>
                 {
-                    OnAdFailedToLoad?.Invoke(this, args);
+                    if (OnAdFailedToLoad != null)
+                    {
+                        OnAdFailedToLoad(this, args);
+                    }
                 };
 
                 /// <summary>
@@ -220,7 +223,10 @@ namespace OpenWrapSDK
                 /// </summary>
                 rewardedAdClient.OnAdFailedToShow += (sender, args) =>
                 {
-                    OnAdFailedToShow?.Invoke(this, args);
+                    if (OnAdFailedToShow != null)
+                    {
+                        OnAdFailedToShow(this, args);
+                    }
                 };
 
                 /// <summary>
@@ -228,7 +234,10 @@ namespace OpenWrapSDK
                 /// </summary>
                 rewardedAdClient.OnAdOpened += (sender, args) =>
                 {
-                    OnAdOpened?.Invoke(this, args);
+                    if (OnAdOpened != null)
+                    {
+                        OnAdOpened(this, args);
+                    }
                 };
 
                 /// <summary>
@@ -236,7 +245,10 @@ namespace OpenWrapSDK
                 /// </summary>
                 rewardedAdClient.OnAdClosed += (sender, args) =>
                 {
-                    OnAdClosed?.Invoke(this, args);
+                    if (OnAdClosed != null)
+                    {
+                        OnAdClosed(this, args);
+                    }
                 };
 
                 /// <summary>
@@ -244,7 +256,10 @@ namespace OpenWrapSDK
                 /// </summary>
                 rewardedAdClient.OnAdClicked += (sender, args) =>
                 {
-                    OnAdClicked?.Invoke(this, args);
+                    if (OnAdClicked != null)
+                    {
+                        OnAdClicked(this, args);
+                    }
                 };
 
                 /// <summary>
@@ -252,7 +267,10 @@ namespace OpenWrapSDK
                 /// </summary>
                 rewardedAdClient.OnAdExpired += (sender, args) =>
                 {
-                    OnAdExpired?.Invoke(this, args);
+                    if (OnAdExpired != null)
+                    {
+                        OnAdExpired(this, args);
+                    }
                 };
 
                 /// <summary>
@@ -260,7 +278,10 @@ namespace OpenWrapSDK
                 /// </summary>
                 rewardedAdClient.OnAppLeaving += (sender, args) =>
                 {
-                    OnAppLeaving?.Invoke(this, args);
+                    if (OnAppLeaving != null)
+                    {
+                        OnAppLeaving(this, args);
+                    }
                 };
 
                 /// <summary>
@@ -268,7 +289,10 @@ namespace OpenWrapSDK
                 /// </summary>
                 rewardedAdClient.OnReceiveReward += (sender, args) =>
                 {
-                    OnReceiveReward?.Invoke(this, args);
+                    if(OnReceiveReward != null)
+                    {
+                        OnReceiveReward(this, args);
+                    }
                 };
             }
         }

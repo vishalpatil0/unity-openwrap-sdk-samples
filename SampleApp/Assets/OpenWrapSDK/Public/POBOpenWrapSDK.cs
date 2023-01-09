@@ -18,6 +18,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 using OpenWrapSDK.Common;
 
 namespace OpenWrapSDK
@@ -30,19 +31,6 @@ namespace OpenWrapSDK
     {
         private static List<POBExternalUserId> externalUserIds = new List<POBExternalUserId>();
 
-        // OpenWrap SDK plugin version. Please make sure to update it with every release.
-        private static readonly string OpenWrapSDKPluginVersion = "2.0.0";
-
-        private static readonly string Tag = "POBOpenWrapSDK";
-
-        /// <summary>
-        /// Static constructor to print unity plugin log
-        /// </summary>
-        static POBOpenWrapSDK()
-        {
-            POBLog.Info(Tag, $"OpenWrap SDK Unity plugin version: {OpenWrapSDKPluginVersion}");
-        }
-
         /// <summary>
         /// Returns the OpenWrap SDK's version.
         /// </summary>
@@ -50,9 +38,9 @@ namespace OpenWrapSDK
         public static string GetVersion()
         {
 #if UNITY_IOS
-            return iOS.OpenWrapSDKClient.GetVersion();        
+            return OpenWrapSDK.iOS.OpenWrapSDKClient.GetVersion();        
 #else
-            return Android.OpenWrapSDKClient.GetVersion();
+            return OpenWrapSDK.Android.OpenWrapSDKClient.GetVersion();
 #endif
         }
 
@@ -64,9 +52,9 @@ namespace OpenWrapSDK
         public static void SetLogLevel(POBSDKLogLevel logLevel)
         {
 #if UNITY_IOS
-            iOS.OpenWrapSDKClient.SetLogLevel(logLevel);
+            OpenWrapSDK.iOS.OpenWrapSDKClient.SetLogLevel(logLevel);
 #else
-            Android.OpenWrapSDKClient.SetLogLevel(logLevel);
+            OpenWrapSDK.Android.OpenWrapSDKClient.SetLogLevel(logLevel);
 #endif
         }
 
@@ -79,9 +67,9 @@ namespace OpenWrapSDK
         public static void SetGDPREnabled(bool enable)
         {
 #if UNITY_IOS
-            iOS.OpenWrapSDKClient.SetGDPREnabled(enable);
+            OpenWrapSDK.iOS.OpenWrapSDKClient.SetGDPREnabled(enable);
 #else
-            Android.OpenWrapSDKClient.SetGDPREnabled(enable);
+            OpenWrapSDK.Android.OpenWrapSDKClient.SetGDPREnabled(enable);
 #endif
         }
 
@@ -92,9 +80,9 @@ namespace OpenWrapSDK
         public static void SetGDPRConsent(string gdprConsent)
         {
 #if UNITY_IOS
-            iOS.OpenWrapSDKClient.SetGDPRConsent(gdprConsent);
+            OpenWrapSDK.iOS.OpenWrapSDKClient.SetGDPRConsent(gdprConsent);
 #else
-            Android.OpenWrapSDKClient.SetGDPRConsent(gdprConsent);
+            OpenWrapSDK.Android.OpenWrapSDKClient.SetGDPRConsent(gdprConsent);
 #endif
         }
 
@@ -108,9 +96,9 @@ namespace OpenWrapSDK
         public static void AllowLocationAccess(bool allow)
         {
 #if UNITY_IOS
-            iOS.OpenWrapSDKClient.AllowLocationAccess(allow);
+            OpenWrapSDK.iOS.OpenWrapSDKClient.AllowLocationAccess(allow);
 #else
-            Android.OpenWrapSDKClient.AllowLocationAccess(allow);
+            OpenWrapSDK.Android.OpenWrapSDKClient.AllowLocationAccess(allow);
 #endif
         }
 
@@ -122,9 +110,9 @@ namespace OpenWrapSDK
         public static void SetUseInternalBrowser(bool use)
         {
 #if UNITY_IOS
-            iOS.OpenWrapSDKClient.SetUseInternalBrowser(use);
+            OpenWrapSDK.iOS.OpenWrapSDKClient.SetUseInternalBrowser(use);
 #else
-            Android.OpenWrapSDKClient.SetUseInternalBrowser(use);
+            OpenWrapSDK.Android.OpenWrapSDKClient.SetUseInternalBrowser(use);
 #endif
         }
 
@@ -139,9 +127,9 @@ namespace OpenWrapSDK
         public static void SetLocation(double longitude, double latitude, POBLocSource source)
         {
 #if UNITY_IOS
-            iOS.OpenWrapSDKClient.SetLocation(longitude, latitude, source);
+            OpenWrapSDK.iOS.OpenWrapSDKClient.SetLocation(longitude, latitude, source);
 #else
-            Android.OpenWrapSDKClient.SetLocation(longitude, latitude, source);
+            OpenWrapSDK.Android.OpenWrapSDKClient.SetLocation(longitude, latitude, source);
 #endif
         }
 
@@ -154,9 +142,9 @@ namespace OpenWrapSDK
         public static void SetCOPPAEnabled(bool enable)
         {
 #if UNITY_IOS
-            iOS.OpenWrapSDKClient.SetCOPPAEnabled(enable);
+            OpenWrapSDK.iOS.OpenWrapSDKClient.SetCOPPAEnabled(enable);
 #else
-            Android.OpenWrapSDKClient.SetCoppaEnabled(enable);
+            OpenWrapSDK.Android.OpenWrapSDKClient.SetCoppaEnabled(enable);
 #endif
         }
 
@@ -167,9 +155,9 @@ namespace OpenWrapSDK
         public static void SetSSLEnabled(bool enable)
         {
 #if UNITY_IOS
-            iOS.OpenWrapSDKClient.SetSSLEnabled(enable);
+            OpenWrapSDK.iOS.OpenWrapSDKClient.SetSSLEnabled(enable);
 #else
-            Android.OpenWrapSDKClient.SetSSLEnabled(enable);
+            OpenWrapSDK.Android.OpenWrapSDKClient.SetSSLEnabled(enable);
 #endif
         }
 
@@ -182,9 +170,9 @@ namespace OpenWrapSDK
         public static void AllowAdvertisingId(bool allow)
         {
 #if UNITY_IOS
-            iOS.OpenWrapSDKClient.AllowAdvertisingId(allow);
+            OpenWrapSDK.iOS.OpenWrapSDKClient.AllowAdvertisingId(allow);
 #else
-            Android.OpenWrapSDKClient.AllowAdvertisingId(allow);
+            OpenWrapSDK.Android.OpenWrapSDKClient.AllowAdvertisingId(allow);
 #endif
         }
 
@@ -198,7 +186,7 @@ namespace OpenWrapSDK
         /// <param name="allow">bool value</param>
         public static void SetAllowAVAudioSessionAccess(bool allow)
         {
-            iOS.OpenWrapSDKClient.SetAllowAVAudioSessionAccess(allow);
+            OpenWrapSDK.iOS.OpenWrapSDKClient.SetAllowAVAudioSessionAccess(allow);
         }
 #endif
 
@@ -214,9 +202,9 @@ namespace OpenWrapSDK
         public static void SetCCPA(string ccpaString)
         {
 #if UNITY_IOS
-            iOS.OpenWrapSDKClient.SetCCPA(ccpaString);
+            OpenWrapSDK.iOS.OpenWrapSDKClient.SetCCPA(ccpaString);
 #else
-            Android.OpenWrapSDKClient.SetCCPA(ccpaString);
+            OpenWrapSDK.Android.OpenWrapSDKClient.SetCCPA(ccpaString);
 #endif
         }
 
@@ -229,9 +217,9 @@ namespace OpenWrapSDK
         public static void SetApplicationInfo(POBApplicationInfo applicationInfo)
         {
 #if UNITY_IOS
-            iOS.OpenWrapSDKClient.SetApplicationInfo(applicationInfo);
+            OpenWrapSDK.iOS.OpenWrapSDKClient.SetApplicationInfo(applicationInfo);
 #else
-            Android.OpenWrapSDKClient.SetApplicationInfo(applicationInfo);
+            OpenWrapSDK.Android.OpenWrapSDKClient.SetApplicationInfo(applicationInfo);
 #endif
         }
 
@@ -242,9 +230,9 @@ namespace OpenWrapSDK
         public static POBApplicationInfo GetApplicationInfo()
         {
 #if UNITY_IOS
-            return iOS.OpenWrapSDKClient.GetApplicationInfo();
+            return OpenWrapSDK.iOS.OpenWrapSDKClient.GetApplicationInfo();
 #else
-            return Android.OpenWrapSDKClient.GetApplicationInfo();
+            return OpenWrapSDK.Android.OpenWrapSDKClient.GetApplicationInfo();
 #endif   
         }
 
@@ -256,9 +244,9 @@ namespace OpenWrapSDK
         public static void SetUserInfo(POBUserInfo userInfo)
         {
 #if UNITY_IOS
-            iOS.OpenWrapSDKClient.SetUserInfo(userInfo);
+            OpenWrapSDK.iOS.OpenWrapSDKClient.SetUserInfo(userInfo);
 #else
-            Android.OpenWrapSDKClient.SetUserInfo(userInfo);
+            OpenWrapSDK.Android.OpenWrapSDKClient.SetUserInfo(userInfo);
 #endif    
         }
 
@@ -274,9 +262,9 @@ namespace OpenWrapSDK
         public static POBUserInfo GetUserInfo()
         {
 #if UNITY_IOS
-            return iOS.OpenWrapSDKClient.GetUserInfo();
+            return OpenWrapSDK.iOS.OpenWrapSDKClient.GetUserInfo();
 #else
-            return Android.OpenWrapSDKClient.GetUserInfo();
+            return OpenWrapSDK.Android.OpenWrapSDKClient.GetUserInfo();
 #endif   
         }
 
@@ -296,18 +284,18 @@ namespace OpenWrapSDK
                 {     
                     externalUserIds.Add(userId);
 #if UNITY_IOS
-                    iOS.OpenWrapSDKClient.AddExternalUserId(userId);
+                    OpenWrapSDK.iOS.OpenWrapSDKClient.AddExternalUserId(userId);
 #else
-                    Android.OpenWrapSDKClient.AddExternalUserId(userId);
+                    OpenWrapSDK.Android.OpenWrapSDKClient.AddExternalUserId(userId);
 #endif  
                 }
                 else
                 {
-                    POBLog.Warning(Tag, POBLogStrings.AddExternalUserIdPartnerIdLog);
+                    Debug.Log("External User Id with duplicate partner id not allowed");
                 }
             }
             else {
-                POBLog.Warning(Tag, POBLogStrings.AddExternalUserIdUserIdLog);
+                Debug.Log("External User Id null or required parameters is not available");
             }
         }
 
@@ -325,21 +313,12 @@ namespace OpenWrapSDK
         /// </summary>
         public static void RemoveAllExternalUserIds()
         {
-            if (externalUserIds.Count > 0)
-            {
-                foreach (POBExternalUserId userid in externalUserIds)
-                {
-                    userid.externalUserIdClient.Destroy();
-                }
-                externalUserIds.Clear();
-
-                #if UNITY_IOS
-                     iOS.OpenWrapSDKClient.RemoveAllExternalUserIds();
-                #else
-                     Android.OpenWrapSDKClient.RemoveAllExternalUserIds();
-                #endif
-
-            }
+#if UNITY_IOS
+             OpenWrapSDK.iOS.OpenWrapSDKClient.RemoveAllExternalUserIds();
+#else
+             OpenWrapSDK.Android.OpenWrapSDKClient.RemoveAllExternalUserIds();
+#endif
+            externalUserIds.Clear();
         }
 
         /// <summary>
@@ -366,9 +345,9 @@ namespace OpenWrapSDK
                 externalUserIds = keepUserIds;
 
 #if UNITY_IOS
-                iOS.OpenWrapSDKClient.RemoveExternalUserIdsWithSource(source);
+                OpenWrapSDK.iOS.OpenWrapSDKClient.RemoveExternalUserIdsWithSource(source);
 #else
-                Android.OpenWrapSDKClient.RemoveExternalUserIds(source);
+                OpenWrapSDK.Android.OpenWrapSDKClient.RemoveExternalUserIds(source);
 #endif
             }
         }

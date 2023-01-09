@@ -32,7 +32,7 @@ namespace OpenWrapSDK.iOS
         #region Private variables
         /// Reference of POBExternalUserId instance from OpenWrap SDK
         private IntPtr externalUserIdPtr = IntPtr.Zero;
-        private readonly string Tag = "POBExternalUserIdClient";
+
         #endregion
 
         #region Internal methods
@@ -135,7 +135,10 @@ namespace OpenWrapSDK.iOS
 
         public Dictionary<string, string> Extension
         {
-            set => SetExtensionInNative(value);
+            set
+            {
+                SetExtensionInNative(value);
+            }
         }
 
         /// <summary>
@@ -154,7 +157,6 @@ namespace OpenWrapSDK.iOS
         {
             if (externalUserIdPtr != IntPtr.Zero && externalUserIdPtr != null)
             {
-                POBLog.Info(Tag, POBLogStrings.DestroyExternalUserId);
                 POBUDestroyExternalUserId(externalUserIdPtr);
                 externalUserIdPtr = IntPtr.Zero;
             }
@@ -172,7 +174,6 @@ namespace OpenWrapSDK.iOS
             {
                 string[] keys = extension.Keys.ToArray();
                 string[] values = extension.Values.ToArray();
-                POBLog.Info(Tag, POBLogStrings.SetExtension);
                 POBUSetExtension(externalUserIdPtr, keys, values, keys.Length);
             }
         }

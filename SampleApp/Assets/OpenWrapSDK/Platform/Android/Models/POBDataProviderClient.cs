@@ -28,7 +28,6 @@ namespace OpenWrapSDK.Android
     internal class POBDataProviderClient : IPOBDataProviderClient
     {
         #region Private variables
-        private readonly string Tag = "POBDataProviderClient";
         private AndroidJavaObject dataProvider;
         #endregion
 
@@ -95,15 +94,10 @@ namespace OpenWrapSDK.Android
             if(dataProvider != null && segment != null && segment.segmentClient != null)
             {
                 AndroidJavaObject segmentObject = segment.segmentClient.GetNativeObject();
-                if(segmentObject != null)
+                if(segment != null)
                 {
-                    POBLog.Info(Tag, POBLogStrings.ClientAddSegmentLog);
                     dataProvider.Call("addSegment", segmentObject);
                 }
-            }
-            else
-            {
-                POBLog.Warning(Tag, POBLogStrings.AddSegmentFailedLog);
             }
         }
 
@@ -115,12 +109,7 @@ namespace OpenWrapSDK.Android
         {
             if (dataProvider != null && segment != null)
             {
-                POBLog.Info(Tag, POBLogStrings.ClientRemoveSegmentLog);
                 dataProvider.Call("removeSegment", segment.Identifier);
-            }
-            else
-            {
-                POBLog.Warning(Tag, POBLogStrings.RemoveSegmentFailedLog);
             }
         }
 
@@ -131,7 +120,6 @@ namespace OpenWrapSDK.Android
         {
             if(dataProvider != null)
             {
-                POBLog.Info(Tag, POBLogStrings.ClientRemoveAllSegmentsLog);
                 dataProvider.Call("removeAllSegments");
             }
         }
@@ -141,7 +129,6 @@ namespace OpenWrapSDK.Android
         /// </summary>
         public void Destroy()
         {
-            POBLog.Info(Tag, POBLogStrings.DestroyMethodLog);
             dataProvider = null;
         }
 

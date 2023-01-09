@@ -19,7 +19,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using OpenWrapSDK.Common;
 
 namespace OpenWrapSDK.Android
 {
@@ -27,10 +26,6 @@ namespace OpenWrapSDK.Android
     /// Android specific Util class.
     /// </summary>
     internal static class POBAndroidUtils {
-
-        #region Private variables
-        private static readonly string Tag = "POBAndroidUtils";
-        #endregion
 
         /// <summary>
         /// Returs the unity player activity.
@@ -56,10 +51,6 @@ namespace OpenWrapSDK.Android
                 _errorEventArgs.ErrorCode = _error.Call<int>("getErrorCode");
                 _errorEventArgs.Message = _error.Call<string>("getErrorMessage");
             }
-            else
-            {
-                POBLog.Warning(Tag, POBLogStrings.ConvertToPOBErrorEventArgsLog);
-            }
             return _errorEventArgs;
         }
 
@@ -76,10 +67,6 @@ namespace OpenWrapSDK.Android
                 POBRewardClient rewardClient = new POBRewardClient(reward);
                 rewardEventArgs = new POBRewardEventArgs(rewardClient);
             }
-            else
-            {
-                POBLog.Warning(Tag, POBLogStrings.GetPOBRewardEventArgsLog);
-            }
             return rewardEventArgs;
         }
 
@@ -90,15 +77,7 @@ namespace OpenWrapSDK.Android
         /// <returns>native POBAdSize</returns>
         internal static AndroidJavaObject ConvertToPOBAdSize(POBAdSize adSize)
         {
-            if(adSize != null)
-            {
-                return new AndroidJavaObject(POBConstants.POBBannerAdSizeClassName, adSize.GetWidth(), adSize.GetHeight());
-            }
-            else
-            {
-                POBLog.Warning(Tag, POBLogStrings.ConvertToPOBAdSizeLog);
-                return null;
-            }
+            return new AndroidJavaObject(POBConstants.POBBannerAdSizeClassName, adSize.GetWidth(), adSize.GetHeight());
         }
 
         /// <summary>
@@ -109,7 +88,7 @@ namespace OpenWrapSDK.Android
         internal static AndroidJavaObject ConvertGenderToJavaObject(POBGender gender)
         {
             AndroidJavaClass POBGenderEnum = new AndroidJavaClass(POBConstants.POBGenderClassName);
-            AndroidJavaObject enumObject = null;
+            AndroidJavaObject enumObject;
             switch(gender)
             {
                 case POBGender.Male:
@@ -122,7 +101,7 @@ namespace OpenWrapSDK.Android
                     enumObject = POBGenderEnum.GetStatic<AndroidJavaObject>("OTHER");
                     break;
                 default:
-                    POBLog.Info(Tag, POBLogStrings.ConvertGenderToJavaObjectLog);
+                    enumObject = null;
                     break;
             }
             return enumObject;
@@ -136,29 +115,21 @@ namespace OpenWrapSDK.Android
         internal static POBGender GetPOBGender(AndroidJavaObject javaObject)
         {
             POBGender gender;
-            if(javaObject != null)
+            string value = javaObject.Call<string>("getValue");
+            switch(value)
             {
-                string value = javaObject.Call<string>("getValue");
-                switch (value)
-                {
-                    case "M":
-                        gender = POBGender.Male;
-                        break;
-                    case "F":
-                        gender = POBGender.Female;
-                        break;
-                    case "O":
-                        gender = POBGender.Other;
-                        break;
-                    default:
-                        gender = POBGender.None;
-                        break;
-                }
-            }
-            else
-            {
-                POBLog.Warning(Tag, POBLogStrings.GetPOBGenderLog);
-                return POBGender.None;
+                case "M":
+                    gender = POBGender.Male;
+                    break;
+                case "F":
+                    gender = POBGender.Female;
+                    break;
+                case "O":
+                    gender = POBGender.Other;
+                    break;
+                default:
+                    gender = POBGender.None;
+                    break;
             }
             return gender;
         }
@@ -261,18 +232,12 @@ namespace OpenWrapSDK.Android
         /// <returns>AndroidJavaObject of type arrayList</returns>
         internal static AndroidJavaObject ConvertListToJavaList<T>(List<T> list)
         {
+
             AndroidJavaObject javaList = new AndroidJavaObject("java.util.ArrayList");
-            if(list != null)
+            //Iterate the list and add each entry of c# list to java arrayList
+            foreach (T obj in list)
             {
-                //Iterate the list and add each entry of c# list to java arrayList
-                foreach (T obj in list)
-                {
-                    javaList.Call<bool>("add", obj);
-                }
-            }
-            else
-            {
-                POBLog.Warning(Tag, POBLogStrings.ConvertListToJavaListLog);
+                javaList.Call<bool>("add", obj);
             }
             return javaList;
         }
@@ -285,19 +250,12 @@ namespace OpenWrapSDK.Android
         internal static Dictionary<K, V> ConvertJavaMapToDictionary<K, V>(AndroidJavaObject map)
         {
             var dict = new Dictionary<K, V>();
-            if (map != null)
+            var iterator = map.Call<AndroidJavaObject>("keySet").Call<AndroidJavaObject>("iterator");
+            while (iterator.Call<bool>("hasNext"))
             {
-                var iterator = map.Call<AndroidJavaObject>("keySet").Call<AndroidJavaObject>("iterator");
-                while (iterator.Call<bool>("hasNext"))
-                {
-                    K key = iterator.Call<K>("next");
-                    V value = map.Call<V>("get", key);
-                    dict.Add(key, value);
-                }
-            }
-            else
-            {
-                POBLog.Warning(Tag, POBLogStrings.ConvertJavaMapToDictionaryLog);
+                K key = iterator.Call<K>("next");
+                V value = map.Call<V>("get", key);
+                dict.Add(key, value);
             }
             return dict;
         }
@@ -405,10 +363,6 @@ namespace OpenWrapSDK.Android
                     );
                 }
             }
-            else
-            {
-                POBLog.Warning(Tag, POBLogStrings.ConvertDictionaryToJavaJSONObjectLog);
-            }
             return extensionJsonObject;
         }
 
@@ -432,10 +386,6 @@ namespace OpenWrapSDK.Android
                     string value = androidJavaObject.Call<string>("getString", key);
                     extensionMap.Add(key, value);
                 }
-            }
-            else
-            {
-                POBLog.Warning(Tag, POBLogStrings.ConvertJavaJSONObjectToDictionaryLog);
             }
             return extensionMap;
         }

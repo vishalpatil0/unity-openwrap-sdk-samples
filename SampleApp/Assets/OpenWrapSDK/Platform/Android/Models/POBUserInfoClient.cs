@@ -27,7 +27,6 @@ namespace OpenWrapSDK.Android
     internal class POBUserInfoClient : IPOBUserInfoClient
     {
         #region Private members
-        private readonly string Tag = "POBUserInfoClient";
         // Reference to Android's POBUSerInfo instance
         private AndroidJavaObject userInfo;
         #endregion
@@ -183,13 +182,8 @@ namespace OpenWrapSDK.Android
                 AndroidJavaObject dataProviderObject = dataProvider.dataProviderClient.GetNativeObject();
                 if(dataProviderObject != null)
                 {
-                    POBLog.Info(Tag, POBLogStrings.ClientAddDataProviderLog);
                     userInfo.Call("addDataProvider", dataProviderObject);
                 }
-            }
-            else
-            {
-                POBLog.Warning(Tag, POBLogStrings.AddDataProviderFailedLog);
             }
         }
 
@@ -215,7 +209,6 @@ namespace OpenWrapSDK.Android
         {
             if(userInfo != null)
             {
-                POBLog.Info(Tag, POBLogStrings.ClientRemoveAllDataProvidersLog);
                 userInfo.Call("removeAllDataProviders");
             }
         }
@@ -228,12 +221,7 @@ namespace OpenWrapSDK.Android
         {
             if(userInfo != null && dataProvider != null)
             {
-                POBLog.Info(Tag, POBLogStrings.ClientRemoveDataProviderLog);
-                userInfo.Call<AndroidJavaObject>("removeDataProvider", dataProvider.Name);
-            }
-            else
-            {
-                POBLog.Warning(Tag, POBLogStrings.RemoveDataProviderFailedLog);
+                userInfo.Call("removeDataProvider", dataProvider.Identifier);
             }
         }
         #endregion

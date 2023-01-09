@@ -24,7 +24,7 @@ using System.IO;
 public class POBATTPostProcessBuildiOS
 {
     // Please update the custom message describing your intended IDFA usage.
-    private const string POBTrackingDescription = "The Advertising Identifier helps deliver ads that are relevant to your interests.";
+    const string POBTrackingDescription = "The Advertising Identifier helps deliver ads that are relevant to your interests.";
 
     [PostProcessBuild(0)]
     public static void OnPostProcessBuild(BuildTarget buildTarget, string pathToXcode)

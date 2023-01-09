@@ -18,7 +18,6 @@
 
 using UnityEngine;
 using System;
-using OpenWrapSDK.Common;
 
 namespace OpenWrapSDK.Android
 {
@@ -27,12 +26,9 @@ namespace OpenWrapSDK.Android
     /// </summary>
     public static class OpenWrapSDKClient
     {
-        #region Private Variable
         private static readonly AndroidJavaClass OpenWrapSDKClass = new AndroidJavaClass(POBConstants.OpenWrapSDKClassName);
 
         private static POBUserInfo internalUserInfo;
-        private static readonly string Tag = "OpenWrapSDKClient";
-        #endregion
 
         /// <summary>
         /// Returns the OpenWrap SDK's native platform version.
@@ -199,17 +195,9 @@ namespace OpenWrapSDK.Android
                 AndroidJavaObject storeURLObject = new AndroidJavaObject("java.net.URL", applicationInfo.StoreURL.ToString());
                 appInfoObject.Call("setStoreURL", storeURLObject);
             }
-            else
-            {
-                POBLog.Warning(Tag, POBLogStrings.SetApplicationInfoStoreURLLog);
-            }
             if(applicationInfo.Paid != POBBool.Unknown)
             {
                 appInfoObject.Call("setPaid", Convert.ToBoolean(applicationInfo.Paid));
-            }
-            else
-            {
-                POBLog.Warning(Tag, POBLogStrings.SetApplicationInfoPaidLog);
             }
             appInfoObject.Call("setCategories", applicationInfo.Categories);
             OpenWrapSDKClass.CallStatic("setApplicationInfo", appInfoObject);
@@ -238,6 +226,7 @@ namespace OpenWrapSDK.Android
                     appInfo.Paid = (POBBool)Convert.ToInt32(appInfoObject.Call<bool>("isPaid"));
                 }
                 appInfo.Categories = appInfoObject.Call<string>("getCategories");
+                
             }
             return appInfo;
         }
@@ -256,14 +245,6 @@ namespace OpenWrapSDK.Android
                    internalUserInfo = userInfo;
                    OpenWrapSDKClass.CallStatic("setUserInfo", userInfoObject);
                 }
-                else
-                {
-                    POBLog.Warning(Tag, POBLogStrings.SetUserInfoObjectFailedLog);
-                }
-            }
-            else
-            {
-                POBLog.Warning(Tag, POBLogStrings.SetUserInfoFailedLog);
             }
         }
 
@@ -284,27 +265,16 @@ namespace OpenWrapSDK.Android
         {
             if (externalUserId != null)
             {
-                OpenWrapSDKClass.CallStatic("addExternalUserId", externalUserId.externalUserIdClient.GetNativeObject());  
-            }
-            else
-            {
-                POBLog.Warning(Tag, POBLogStrings.AddExternalUserIdFailedLog);
+                OpenWrapSDKClass.CallStatic("addExternalUserId", externalUserId.externalUserIdClient.GetNativeObject());
+                
             }
         }
 
         /// <summary>
         /// Removes the external user ids of a particular source
         /// </summary>
-        public static void RemoveExternalUserIds(string source)
-        {
-            if (source != null)
-            {
-                OpenWrapSDKClass.CallStatic("removeExternalUserIds", source);
-            }
-            else
-            {
-                POBLog.Warning(Tag, POBLogStrings.RemoveExternalUserIdsFailedLog);
-            }
+        public static void RemoveExternalUserIds(string source) {
+            OpenWrapSDKClass.CallStatic("removeExternalUserIds", source);
         }
 
         /// <summary>

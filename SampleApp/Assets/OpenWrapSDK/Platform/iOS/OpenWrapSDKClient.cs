@@ -20,7 +20,6 @@ using System;
 using System.Runtime.InteropServices;
 using System.Collections.Generic;
 using System.Linq;
-using OpenWrapSDK.Common;
 
 namespace OpenWrapSDK.iOS
 {
@@ -31,7 +30,7 @@ namespace OpenWrapSDK.iOS
     {
         #region Private/Internal members
         private static POBUserInfo internalUserInfo;
-        private static string Tag = "OpenWrapSDKClient";
+
         /// POBApplicationInfo structure. Keep is similar to POBApplicationInfo class
         internal struct POBApplicationInfoInternal
         {
@@ -227,7 +226,6 @@ namespace OpenWrapSDK.iOS
                 IntPtr externalUserIdClientPtr = userId.externalUserIdClient.GetNativeExternalUserIdPtr();
                 if (externalUserIdClientPtr != null)
                 {
-                    POBLog.Info(Tag, POBLogStrings.AddExternalUserId);
                     POBUAddExternalUserId(externalUserIdClientPtr);
                 }
             }
@@ -238,7 +236,6 @@ namespace OpenWrapSDK.iOS
         /// </summary>
         public static void RemoveAllExternalUserIds()
         {
-            POBLog.Info(Tag, POBLogStrings.RemoveAllExternalUserIds);
             POBURemoveAllExternalUserIds();
         }
 
@@ -248,7 +245,6 @@ namespace OpenWrapSDK.iOS
         /// <param name="source">Name of the data partner to remove data for</param>
         public static void RemoveExternalUserIdsWithSource(string source)
         {
-            POBLog.Info(Tag, POBLogStrings.RemoveExternalUserIdsWithSource);
             POBURemoveExternalUserIdsWithSource(source);
         }
         #endregion

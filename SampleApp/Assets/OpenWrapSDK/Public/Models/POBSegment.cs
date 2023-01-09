@@ -30,6 +30,12 @@ namespace OpenWrapSDK
         /// </summary>
         internal IPOBSegmentClient segmentClient;
 
+        //Segment Identifier
+        private string segIdentifier;
+
+        /// Segment name
+        private string segName;
+
         /// Segment value
         private string segValue;
         #endregion
@@ -41,7 +47,7 @@ namespace OpenWrapSDK
         /// <param name="identifier">Segment identifier</param>
         public POBSegment(string identifier)
         {
-            Identifier = identifier;
+            segIdentifier = identifier;
 #if UNITY_IOS
             segmentClient = new iOS.POBSegmentClient(identifier, null);
 #else
@@ -56,8 +62,8 @@ namespace OpenWrapSDK
         /// <param name="name">Segment name</param>
         public POBSegment(string identifier, string name)
         {
-            Identifier = identifier;
-            Name = name;
+            segIdentifier = identifier;
+            segName = name;
 #if UNITY_IOS
             segmentClient = new iOS.POBSegmentClient(identifier, name);
 #else
@@ -70,15 +76,8 @@ namespace OpenWrapSDK
         /// </summary>
         ~POBSegment()
         {
-            Destroy();
-        }
-        #endregion
-
-        #region Internal methods
-        internal void Destroy()
-        {
-            Name = null;
-            Identifier = null;
+            segName = null;
+            segIdentifier = null;
             segValue = null;
 
             if (segmentClient != null)
@@ -93,14 +92,23 @@ namespace OpenWrapSDK
         /// <summary>
         /// Getter for the segment name
         /// </summary>
-        public string Name { get; private set; }
+        public string Name
+        {
+            get
+            {
+                return segName;
+            }
+        }
 
         /// <summary>
         /// Getter setter for the segment value
         /// </summary>
         public string Value
         {
-            get => segValue;
+            get
+            {
+                return segValue;
+            }
 
             set
             {
@@ -116,7 +124,13 @@ namespace OpenWrapSDK
         /// Getter for the segment identifier
         /// </summary>
         /// <returns>segment identifier as string</returns>
-        public string Identifier { get; private set; }
+        public string Identifier
+        {
+            get
+            {
+                return segIdentifier;
+            }
+        }
         #endregion
     }
 }

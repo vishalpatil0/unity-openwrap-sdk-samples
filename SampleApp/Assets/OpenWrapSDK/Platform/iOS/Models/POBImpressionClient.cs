@@ -19,7 +19,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using OpenWrapSDK.Common;
+using OpenWrapSDK;
 
 namespace OpenWrapSDK.iOS
 {
@@ -29,8 +29,7 @@ namespace OpenWrapSDK.iOS
     internal class POBImpressionClient : IPOBImpression
     {
         // Reference to iOS's POBImpression
-        private readonly IntPtr impressionPtr;
-        private readonly string Tag = "POBImpressionClient";
+        private IntPtr impressionPtr;
 
         /// <summary>
         /// Constructor
@@ -91,7 +90,7 @@ namespace OpenWrapSDK.iOS
         /// <param name="position">Instance of POBAdPosition</param>
         public void SetAdPosition(POBAdPosition position)
         {
-            POBUSetAdPosition(impressionPtr, (int)position);
+            POBUSetAdPosition(impressionPtr, ((int)position));
         }
 
         /// <summary>
@@ -103,7 +102,6 @@ namespace OpenWrapSDK.iOS
             foreach (KeyValuePair<string, List<string>> keyValuePair in customParams)
             {
                 List<string> valueList = keyValuePair.Value;
-                POBLog.Info(Tag, POBLogStrings.SetCustomParams);
                 POBUSetCustomParams(impressionPtr, keyValuePair.Key, valueList.ToArray(), valueList.Count);
             }
         }

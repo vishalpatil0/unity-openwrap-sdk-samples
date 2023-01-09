@@ -27,9 +27,9 @@ namespace OpenWrapSDK.Android
     /// </summary>
     internal class POBInterstitialClient : AndroidJavaProxy, IPOBInterstitialClient
     {
-        #region Private variables
-        private readonly string Tag = "POBInterstitialClient";
-        private readonly AndroidJavaObject androidInterstitialAd;
+#region Private variables
+
+        private AndroidJavaObject androidInterstitialAd;
         #endregion
 
         /// <summary>
@@ -43,9 +43,6 @@ namespace OpenWrapSDK.Android
         {
             AndroidJavaObject activityContext = POBAndroidUtils.getActivity();
             this.androidInterstitialAd = new AndroidJavaObject(POBConstants.POBInterstitialClassName, activityContext, owPublisherId, owProfileId, owAdUnitId, this);
-            // Initialize the event dispatcher 
-            POBEventsDispatcher.Initialize();
-
         }
 
         /// <summary>
@@ -135,7 +132,6 @@ namespace OpenWrapSDK.Android
         /// <returns>is ready status</returns>
         public bool IsReady()
         {
-            POBLog.Info(Tag, POBLogStrings.ClientIsReadyLog);
             return this.androidInterstitialAd.Call<bool>("isReady");
         }
 
@@ -144,7 +140,6 @@ namespace OpenWrapSDK.Android
         /// </summary>
         public void LoadAd()
         {
-            POBLog.Info(Tag, POBLogStrings.ClientLoadAdLog);
             this.androidInterstitialAd.Call("loadAd");
         }
 
@@ -153,7 +148,6 @@ namespace OpenWrapSDK.Android
         /// </summary>
         public void ShowAd()
         {
-            POBLog.Info(Tag, POBLogStrings.ClientShowAdLog);
             this.androidInterstitialAd.Call("show");
         }
 
@@ -162,7 +156,6 @@ namespace OpenWrapSDK.Android
         /// </summary>
         public void Destroy()
         {
-            POBLog.Info(Tag, POBLogStrings.ClientDestroyLog);
             this.androidInterstitialAd.Call("destroy");
         }
         #endregion
@@ -175,10 +168,7 @@ namespace OpenWrapSDK.Android
         {
             if (OnAdLoaded != null)
             {
-                POBEventsDispatcher.ScheduleInUpdate(() => {
-                    OnAdLoaded(this, EventArgs.Empty);
-                });
-                
+                OnAdLoaded(this, EventArgs.Empty);
             }
         }
 
@@ -190,10 +180,7 @@ namespace OpenWrapSDK.Android
         {
             if (OnAdFailedToLoad != null)
             {
-                POBEventsDispatcher.ScheduleInUpdate(() => {
-                    OnAdFailedToLoad(this, POBAndroidUtils.ConvertToPOBErrorEventArgs(error));
-                });
-                
+                OnAdFailedToLoad(this, POBAndroidUtils.ConvertToPOBErrorEventArgs(error));
             }
         }
 
@@ -205,10 +192,7 @@ namespace OpenWrapSDK.Android
         {
             if (OnAdFailedToShow != null)
             {
-                POBEventsDispatcher.ScheduleInUpdate(() => {
-                    OnAdFailedToShow(this, POBAndroidUtils.ConvertToPOBErrorEventArgs(error));
-                });
-                
+                OnAdFailedToShow(this, POBAndroidUtils.ConvertToPOBErrorEventArgs(error));
             }
         }
 
@@ -219,10 +203,7 @@ namespace OpenWrapSDK.Android
         {
             if (OnAppLeaving != null)
             {
-                POBEventsDispatcher.ScheduleInUpdate(() => {
-                    OnAppLeaving(this, EventArgs.Empty);
-                });
-                
+                OnAppLeaving(this, EventArgs.Empty);
             }
         }
 
@@ -233,10 +214,7 @@ namespace OpenWrapSDK.Android
         {
             if (OnAdOpened != null)
             {
-                POBEventsDispatcher.ScheduleInUpdate(() => {
-                    OnAdOpened(this, EventArgs.Empty);
-                });
-                
+                OnAdOpened(this, EventArgs.Empty);
             }
         }
 
@@ -247,10 +225,7 @@ namespace OpenWrapSDK.Android
         {
             if (OnAdClosed != null)
             {
-                POBEventsDispatcher.ScheduleInUpdate(() => {
-                    OnAdClosed(this, EventArgs.Empty);
-                });
-                
+                OnAdClosed(this, EventArgs.Empty);
             }
         }
 
@@ -261,10 +236,7 @@ namespace OpenWrapSDK.Android
         {
             if (OnAdClicked != null)
             {
-                POBEventsDispatcher.ScheduleInUpdate(() => {
-                    OnAdClicked(this, EventArgs.Empty);
-                });
-                
+                OnAdClicked(this, EventArgs.Empty);
             }
         }
 
@@ -275,10 +247,7 @@ namespace OpenWrapSDK.Android
         {
             if (OnAdExpired != null)
             {
-                POBEventsDispatcher.ScheduleInUpdate(() => {
-                    OnAdExpired(this, EventArgs.Empty);
-                });
-                
+                OnAdExpired(this, EventArgs.Empty);
             }
         }
 
@@ -289,10 +258,7 @@ namespace OpenWrapSDK.Android
         {
             if (OnVideoPlaybackCompleted != null) 
             {
-                POBEventsDispatcher.ScheduleInUpdate(() => {
-                    OnVideoPlaybackCompleted(this, EventArgs.Empty);
-                });
-                
+                OnVideoPlaybackCompleted(this, EventArgs.Empty);
             }
         }
 #endregion

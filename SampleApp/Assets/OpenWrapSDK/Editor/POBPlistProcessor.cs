@@ -16,6 +16,7 @@
 * TO REPRODUCE, DISCLOSE OR DISTRIBUTE ITS CONTENTS, OR TO MANUFACTURE, USE, OR SELL ANYTHING THAT IT  MAY DESCRIBE, IN WHOLE OR IN PART.
 */
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -32,14 +33,14 @@ public class POBPlistProcessor
     private const string SKADNETWORKS_FILE_PATH = "OpenWrapSDK/Editor/OpenWrapSDKSKAdNetworkIDs.xml";
 
     [PostProcessBuild]
-    public static void OnPostprocessBuild(BuildTarget _, string path)
+    public static void OnPostprocessBuild(BuildTarget buildTarget, string path)
     {
         // Get Xcode project file path
         if (path != null)
         {
             // Add SKAdNetwork Ids into info.plist
-            string plistPath = Path.Combine(path, "Info.plist");
-            PlistDocument plist = new PlistDocument();
+            var plistPath = Path.Combine(path, "Info.plist");
+            var plist = new PlistDocument();
             plist.ReadFromFile(plistPath);
 
             AddSkAdNetworksIds(plist);
@@ -52,28 +53,24 @@ public class POBPlistProcessor
         List<string> skAdNetworkIds = ReadSKAdNetworkIDsFile();
 
         // Check if we have a vali  d list of SKAdNetworkIds that need to be added.
-        if (skAdNetworkIds == null || skAdNetworkIds.Count < 1)
-        {
-            return;
-        }
+        if (skAdNetworkIds == null || skAdNetworkIds.Count < 1) return;
 
-        _ = plist.root.values.TryGetValue(KEY_SK_ADNETWORK_ITEMS, out PlistElement skAdNetworkItems);
+        PlistElement skAdNetworkItems;
+        plist.root.values.TryGetValue(KEY_SK_ADNETWORK_ITEMS, out skAdNetworkItems);
 
-        HashSet<string> existingSkAdNetworkIds = new HashSet<string>();
+        var existingSkAdNetworkIds = new HashSet<string>();
 
         // If the SKAdNetworkItems are already in added the info.Plist, then get all the existing Ids
         if (skAdNetworkItems != null && skAdNetworkItems.GetType() == typeof(PlistElementArray))
         {
-            IEnumerable<PlistElement> plistElementDictionaries = skAdNetworkItems.AsArray().values.Where(plistElement => plistElement.GetType() == typeof(PlistElementDict));
-            foreach (PlistElement plistElement in plistElementDictionaries)
+            var plistElementDictionaries = skAdNetworkItems.AsArray().values.Where(plistElement => plistElement.GetType() == typeof(PlistElementDict));
+            foreach (var plistElement in plistElementDictionaries)
             {
-                _ = plistElement.AsDict().values.TryGetValue(KEY_SK_ADNETWORK_ID, out PlistElement existingId);
-                if (existingId == null || existingId.GetType() != typeof(PlistElementString) || string.IsNullOrEmpty(existingId.AsString()))
-                {
-                    continue;
-                }
+                PlistElement existingId;
+                plistElement.AsDict().values.TryGetValue(KEY_SK_ADNETWORK_ID, out existingId);
+                if (existingId == null || existingId.GetType() != typeof(PlistElementString) || string.IsNullOrEmpty(existingId.AsString())) continue;
 
-                _ = existingSkAdNetworkIds.Add(existingId.AsString());
+                existingSkAdNetworkIds.Add(existingId.AsString());
             }
         }
         else
@@ -82,15 +79,12 @@ public class POBPlistProcessor
             skAdNetworkItems = plist.root.CreateArray(KEY_SK_ADNETWORK_ITEMS);
         }
 
-        foreach (string skAdNetworkId in skAdNetworkIds)
+        foreach (var skAdNetworkId in skAdNetworkIds)
         {
             // Skip adding IDs that are already in the array.
-            if (existingSkAdNetworkIds.Contains(skAdNetworkId))
-            {
-                continue;
-            }
+            if (existingSkAdNetworkIds.Contains(skAdNetworkId)) continue;
 
-            PlistElementDict skAdNetworkItemDict = skAdNetworkItems.AsArray().AddDict();
+            var skAdNetworkItemDict = skAdNetworkItems.AsArray().AddDict();
             skAdNetworkItemDict.SetString(KEY_SK_ADNETWORK_ID, skAdNetworkId);
         }
     }

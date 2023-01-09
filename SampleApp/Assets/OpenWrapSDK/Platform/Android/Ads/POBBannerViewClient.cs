@@ -28,8 +28,8 @@ namespace OpenWrapSDK.Android
     internal class POBBannerViewClient : AndroidJavaProxy, IPOBBannerViewClient
     {
         #region Private variables
-        private readonly string Tag = "POBBannerViewClient";
-        private readonly AndroidJavaObject androidBannerAd;
+
+        private AndroidJavaObject androidBannerAd;
         #endregion
         /// <summary>
         /// Constructor
@@ -44,8 +44,6 @@ namespace OpenWrapSDK.Android
         {
             AndroidJavaObject activityContext = POBAndroidUtils.getActivity();
             this.androidBannerAd = new AndroidJavaObject(POBConstants.POBBannerViewClassName, activityContext, owPublisherId, owProfileId, owAdUnitId, POBAndroidUtils.ConvertToPOBAdSize(adSize), this);
-            // Initialize the event dispatcher 
-            POBEventsDispatcher.Initialize();
         }
 
         /// <summary>
@@ -92,7 +90,6 @@ namespace OpenWrapSDK.Android
         /// </summary>
         public void Destroy()
         {
-            POBLog.Info(Tag, POBLogStrings.ClientDestroyLog);
             this.androidBannerAd.Call("destroy");
         }
 
@@ -140,7 +137,6 @@ namespace OpenWrapSDK.Android
         /// </summary>
         public void LoadAd()
         {
-            POBLog.Info(Tag, POBLogStrings.ClientLoadAdLog);
             this.androidBannerAd.Call("loadAd");
         }
 
@@ -157,9 +153,7 @@ namespace OpenWrapSDK.Android
         /// <summary>
         /// Method to pause refresh of OpenWrap Banner ad.
         /// </summary>
-        public void PauseAutoRefresh()
-        {
-            POBLog.Info(Tag, POBLogStrings.ClientPauseAutoRefreshLog);
+        public void PauseAutoRefresh() {
             this.androidBannerAd.Call("pauseAutoRefresh");
         }
 
@@ -168,7 +162,6 @@ namespace OpenWrapSDK.Android
         /// </summary>
         public void ResumeAutoRefresh()
         {
-            POBLog.Info(Tag, POBLogStrings.ClientResumeAutoRefreshLog);
             this.androidBannerAd.Call("resumeAutoRefresh");
         }
 
@@ -178,7 +171,6 @@ namespace OpenWrapSDK.Android
         /// </summary>
         public bool ForceRefresh()
         {
-            POBLog.Info(Tag, POBLogStrings.ClientForceRefreshLog);
             return this.androidBannerAd.Call<bool>("forceRefresh");
         }
 
@@ -190,10 +182,7 @@ namespace OpenWrapSDK.Android
         {
             if (OnAdLoaded != null)
             {
-                POBEventsDispatcher.ScheduleInUpdate(() => {
-                    OnAdLoaded(this, EventArgs.Empty);
-                });
-                
+                OnAdLoaded(this, EventArgs.Empty);
             }
         }
 
@@ -205,10 +194,7 @@ namespace OpenWrapSDK.Android
         {
             if (OnAdFailedToLoad != null)
             {
-                POBEventsDispatcher.ScheduleInUpdate(() => {
-                    OnAdFailedToLoad(this, POBAndroidUtils.ConvertToPOBErrorEventArgs(error));
-                });
-                
+                OnAdFailedToLoad(this, POBAndroidUtils.ConvertToPOBErrorEventArgs(error));
             }
         }
 
@@ -219,10 +205,7 @@ namespace OpenWrapSDK.Android
         {
             if (OnAppLeaving != null)
             {
-                POBEventsDispatcher.ScheduleInUpdate(() => {
-                    OnAppLeaving(this, EventArgs.Empty);
-                });
-                
+                OnAppLeaving(this, EventArgs.Empty);
             }
         }
 
@@ -233,10 +216,7 @@ namespace OpenWrapSDK.Android
         {
             if (OnAdOpened != null)
             {
-                POBEventsDispatcher.ScheduleInUpdate(() => {
-                    OnAdOpened(this, EventArgs.Empty);
-                });
-                
+                OnAdOpened(this, EventArgs.Empty);
             }
         }
 
@@ -247,10 +227,7 @@ namespace OpenWrapSDK.Android
         {
             if (OnAdClosed != null)
             {
-                POBEventsDispatcher.ScheduleInUpdate(() => {
-                    OnAdClosed(this, EventArgs.Empty);
-                });
-                
+                OnAdClosed(this, EventArgs.Empty);
             }
         }
 
@@ -261,10 +238,7 @@ namespace OpenWrapSDK.Android
         {
             if (OnAdClicked != null)
             {
-                POBEventsDispatcher.ScheduleInUpdate(() => {
-                    OnAdClicked(this, EventArgs.Empty);
-                });
-                
+                OnAdClicked(this, EventArgs.Empty);
             }
         }
 

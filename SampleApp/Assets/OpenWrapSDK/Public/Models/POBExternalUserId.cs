@@ -28,15 +28,17 @@ namespace OpenWrapSDK
     public class POBExternalUserId
     {
         #region Private variables
-        internal IPOBExternalUserId externalUserIdClient;
-        private readonly string Tag = "POBExternalUserId";
+        internal readonly IPOBExternalUserId externalUserIdClient;
+
+        private string id;
+        private string source;
+
         private int aType;
 
         private Dictionary<string, string> extension;
 
         #endregion
 
-        #region Constructor/Destructor
         /// <summary>
         /// Method to instantiate POBExternalUserId
         /// </summary>
@@ -44,56 +46,55 @@ namespace OpenWrapSDK
         /// <param name="externalUserId">Id of the data partner</param>
         public POBExternalUserId(string source, string externalUserId)
         {
-            if (source != null && externalUserId != null)
-            {
-            Source = source;
-            Id = externalUserId;
+            this.source = source;
+            this.id = externalUserId;
             #if UNITY_IOS
                  externalUserIdClient = new iOS.POBExternalUserIdClient(source, externalUserId);
             #else
                  externalUserIdClient = new Android.POBExternalUserIdClient(source, externalUserId);
             #endif
-            }
-            else
-            {
-                POBLog.Warning(Tag, POBLogStrings.InvalidSourceAndId);
-            }
         }
-
-        /// <summary>
-        /// Destructor
-        /// </summary>
-        ~POBExternalUserId()
-        {
-            if (externalUserIdClient != null)
-            {
-                externalUserIdClient.Destroy();
-                externalUserIdClient = null;
-            }
-        }
-        #endregion
 
         #region Public APIs
         /// <summary>
         /// Name of the data partner
         /// </summary>
-        public string Source { get; }
+        public string Source
+        {
+            get
+            {
+                return source;
+            }
+
+            
+        }
 
         /// <summary>
         /// Id of the data partner
         /// </summary>
-        public string Id { get; }
+        public string Id
+        {
+            get
+            {
+                return id;
+            }
+            
+            
+        }
 
         /// <summary>
         /// A non-zero value for user agent type
         /// </summary>
         public int Atype
         {
-            get => aType;
+            get
+            {
+                return aType;
+            }
             set
             {
                 aType = value;
-                if (externalUserIdClient != null)
+                if(externalUserIdClient != null)
                 {
                     externalUserIdClient.Atype = value;
                 }
@@ -105,12 +106,15 @@ namespace OpenWrapSDK
         /// </summary>
         public Dictionary<string, string> Extension
         {
-            get => extension;
+            get
+            {
+                return extension;
+            }
             set
             {
-                if (externalUserIdClient != null && value != null)
+                extension = value;
+                if (externalUserIdClient != null)
                 {
-                    extension = value;
                     externalUserIdClient.Extension = value;
                 }
             }

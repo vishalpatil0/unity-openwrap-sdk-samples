@@ -31,7 +31,6 @@ namespace OpenWrapSDK.iOS
     {
         #region Private variables
         private IntPtr dataProviderPtr;
-        private readonly string Tag = "POBDataProviderClient";
         #endregion
 
         #region Constructor/Destructor
@@ -50,18 +49,7 @@ namespace OpenWrapSDK.iOS
         /// </summary>
         ~POBDataProviderClient()
         {
-            if (dataProviderPtr != IntPtr.Zero)
-            {
-                POBLog.Info(Tag, POBLogStrings.DestroyDataProvider);
-                // In a case - 
-                // When any publisher creates dataprovider in C#, it's Obj-C instance gets added in iOS's local cache
-                // maintained by plugin.
-                // If it is not added further in POBUserInfo and destructor of C# instance is called, cleanup of C# object is done properly
-                // but the Obj-C instance stored in iOS's local cache is not removed automatically, which results in memory leak.
-                // To avoid this, it is MANDATORY to call destroy manually from destructor.
-                POBUDestroyDataProvider(dataProviderPtr);
-                dataProviderPtr = IntPtr.Zero;
-            }
+            Destroy();
         }
         #endregion
 
@@ -108,7 +96,10 @@ namespace OpenWrapSDK.iOS
         /// </summary>
         public Dictionary<string, string> Extension
         {
-            set => SetExtensionInNative(value);
+            set
+            {
+                SetExtensionInNative(value);
+            }
         }
 
         /// <summary>
@@ -124,7 +115,6 @@ namespace OpenWrapSDK.iOS
                     IntPtr segmentPtr = segment.segmentClient.GetNativePtr();
                     if (segmentPtr != IntPtr.Zero)
                     {
-                        POBLog.Info(Tag, POBLogStrings.AddSegment);
                         POBUAddSegment(dataProviderPtr, segmentPtr);
                     }
                 }
@@ -142,7 +132,6 @@ namespace OpenWrapSDK.iOS
                 IntPtr segmentPtr = segment.segmentClient.GetNativePtr();
                 if (segmentPtr != IntPtr.Zero)
                 {
-                    POBLog.Info(Tag, POBLogStrings.RemoveSegment);
                     POBURemoveSegment(dataProviderPtr, segmentPtr);
                 }
             }
@@ -155,7 +144,6 @@ namespace OpenWrapSDK.iOS
         {
             if (dataProviderPtr != IntPtr.Zero)
             {
-                POBLog.Info(Tag, POBLogStrings.RemoveAllSegments);
                 POBURemoveAllSegments(dataProviderPtr);
             }
         }
@@ -165,11 +153,11 @@ namespace OpenWrapSDK.iOS
         /// </summary>
         public void Destroy()
         {
-            // This is a cleanup API, which is expected to be used only by internal classes.
-            // When any data provider is removed from native iOS, it's Objective-C instance also gets deallocated
-            // as no other object retains it. So we MUST cleanup it's reference from this client class
-            // as soon as it is removed, to avoid dangling pointer access in future.
-            dataProviderPtr = IntPtr.Zero;
+            if (dataProviderPtr != IntPtr.Zero)
+            {
+                POBUDestroyDataProvider(dataProviderPtr);
+                dataProviderPtr = IntPtr.Zero;
+            }
         }
 
         /// <summary>
@@ -193,7 +181,6 @@ namespace OpenWrapSDK.iOS
             {
                 string[] keys = extension.Keys.ToArray();
                 string[] values = extension.Values.ToArray();
-                POBLog.Info(Tag, POBLogStrings.SetDataProviderExtension);
                 POBUSetDataProviderExtension(dataProviderPtr, keys, values, keys.Length);
             }
         }
